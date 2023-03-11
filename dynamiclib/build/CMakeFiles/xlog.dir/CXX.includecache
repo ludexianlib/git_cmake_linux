@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ldx/cmake/git_cmake_linux/dynamiclib/xlog/xlog.cpp
+xlog.h
+/home/ldx/cmake/git_cmake_linux/dynamiclib/xlog/xlog.h
+iostream
+-
+
+/home/ldx/cmake/git_cmake_linux/dynamiclib/xlog/xlog.h
+
