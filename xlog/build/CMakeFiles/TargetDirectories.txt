@@ -1,3 +1,0 @@
-/home/ldx/cmake/git_cmake_linux/xlog/build/CMakeFiles/rebuild_cache.dir
-/home/ldx/cmake/git_cmake_linux/xlog/build/CMakeFiles/xlog.dir
-/home/ldx/cmake/git_cmake_linux/xlog/build/CMakeFiles/edit_cache.dir
