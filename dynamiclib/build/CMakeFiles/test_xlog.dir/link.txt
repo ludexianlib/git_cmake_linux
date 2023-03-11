@@ -1,1 +1,0 @@
-/usr/bin/c++     CMakeFiles/test_xlog.dir/test_xlog/test_xlog.cpp.o  -o test_xlog -Wl,-rpath,/home/ldx/cmake/git_cmake_linux/dynamiclib/build libxlog.so 
