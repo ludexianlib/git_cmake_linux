@@ -6,6 +6,7 @@
 	#define XLOG_API __declspec(dllexport)
 #else
 	#define XLOG_API __declspec(dllimport)
+#endif
 #else
 	#define XLOG_API
 #endif
