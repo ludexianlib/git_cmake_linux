@@ -6,6 +6,7 @@ set(SRC_LIST BinaryTree.cpp
              main.cpp
              SqStack.cpp
              LinkQueue.cpp
+             Huffman.cpp
 )
 
 add_executable(binarytree ${SRC_LIST})
