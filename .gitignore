@@ -5,6 +5,7 @@
 /xlog/build
 /test_xlog/build
 /dynamiclib/build
+/sharedlib/build
 
 /dp/tree/build
 /dp/array/build
