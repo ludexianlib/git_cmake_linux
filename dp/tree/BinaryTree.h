@@ -23,6 +23,7 @@ private:
 public:
     BinaryTree();
     ~BinaryTree();
-    void PreOrderTraverse(); // 非递归先序遍历
-    void InOrderTraverse(); // 非递归中序遍历
+    void PreOrderTraverse();    // 非递归先序遍历
+    void InOrderTraverse();     // 非递归中序遍历
+    void LevelOrderTraverse();  // 层次遍历
 };

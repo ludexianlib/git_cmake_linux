@@ -1,4 +1,5 @@
 #include "BinaryTree.h"
+#include "LinkQueue.h"
 #include "SqStack.h"
 #include <iostream>
 using namespace std;
@@ -65,6 +66,27 @@ void BinaryTree::InOrderTraverse()
             s.Pop(&p);
             cout << "data: " << p->data << endl;
             p = p->rchild;
+        }
+    }
+}
+
+void BinaryTree::LevelOrderTraverse()
+{
+    cout << "LevelOrderTraverse..." << endl;
+    LinkQueue q;
+    BiTNode *t;
+    if (bt)
+    {
+        q.EnQueue(bt);
+        while (q.QueueEmpty() == false)
+        {   
+            t = q.DeQueue();
+            if (t)
+                cout << "data: " << t->data << endl;
+            if (t->lchild)
+                q.EnQueue(t->lchild);
+            if (t->rchild)
+                q.EnQueue(t->rchild);
         }
     }
 }

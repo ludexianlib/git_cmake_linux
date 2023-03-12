@@ -1,6 +1,6 @@
 #include "SqStack.h"
 
- SqStack::SqStack(int m)
+SqStack::SqStack(int m)
     : stacksize(m), top(-1) {}
 
 SqStack::~SqStack()

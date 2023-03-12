@@ -24,6 +24,7 @@ void LinkQueue::EnQueue(int e)
     Node* s;
     s = new Node;
     s->data = e;
+    s->next = rear->next;
     rear->next = s;
     rear = s;
     if (front->next == nullptr)
@@ -42,6 +43,8 @@ int LinkQueue::DeQueue()
     p = front->next;
     e = p->data;
     front->next = p->next;
+    if(p->next == nullptr)
+        rear = front;
     delete p;
     return e;
 }
