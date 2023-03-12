@@ -52,14 +52,12 @@ public:
         base[top] = p;
     }
 
-    BiTNode* Pop()
+    void Pop(BiTNode** p)
     {
         if (top == -1)
-            return nullptr;
-        BiTNode* p = base[top];
+            return;
+        *p = base[top];
         top--;
-
-        return p;
     }
 
     bool StackEmpty()
@@ -83,7 +81,7 @@ void BinaryTree::PreOrderTraverse()
         }
         else
         {
-            p = s.Pop();
+            s.Pop(&p);
             p = p->rchild;
         }
     }
