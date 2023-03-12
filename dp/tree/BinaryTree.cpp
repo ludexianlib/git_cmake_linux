@@ -1,4 +1,5 @@
 #include "BinaryTree.h"
+#include "SqStack.h"
 #include <iostream>
 using namespace std;
 
@@ -26,49 +27,9 @@ int BinaryTree::PreTraverse(BiTNode* p)
     return 0;
 }
 
-
-class SqStack
-{
-
-private:
-    BiTNode* base[20] = { nullptr };
-    int top;
-    int stacksize;
-public:
-    SqStack(int m)
-        : stacksize(m), top(-1)
-    {}
-    ~SqStack()
-    {
-        top = -1;
-        stacksize = 0;
-    }
-
-    void Push(BiTNode* p)
-    {
-        if (top == stacksize - 1)
-            return;
-        ++top;
-        base[top] = p;
-    }
-
-    void Pop(BiTNode** p)
-    {
-        if (top == -1)
-            return;
-        *p = base[top];
-        top--;
-    }
-
-    bool StackEmpty()
-    {
-        return top == -1 ? true: false;
-    }
-
-};
-
 void BinaryTree::PreOrderTraverse()
 {
+    cout << "PreOrderTraverse..." << endl;
     BiTNode* p = bt;
     SqStack s(20);
     while (p || s.StackEmpty() == false)
@@ -82,6 +43,27 @@ void BinaryTree::PreOrderTraverse()
         else
         {
             s.Pop(&p);
+            p = p->rchild;
+        }
+    }
+}
+
+void BinaryTree::InOrderTraverse()
+{
+    cout << "InOrderTraverse..." << endl;
+    BiTNode* p = bt;
+    SqStack s(20);
+    while (p || s.StackEmpty() == false)
+    {
+        if (p)
+        {
+            s.Push(p);
+            p = p->lchild;
+        }
+        else
+        {
+            s.Pop(&p);
+            cout << "data: " << p->data << endl;
             p = p->rchild;
         }
     }

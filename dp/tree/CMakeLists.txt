@@ -4,6 +4,7 @@ project(binarytree)
 
 set(SRC_LIST BinaryTree.cpp
              main.cpp
+             SqStack.cpp
 )
 
 add_executable(binarytree ${SRC_LIST})
