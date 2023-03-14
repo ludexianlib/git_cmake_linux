@@ -25,6 +25,7 @@ Huffman::Huffman(int w[], int n)
     {
         /* 每次选取候选权值中最小的两个 */
         // 假设求得的位置为i和j
+
         int i = 3, j = 5;
 
         // 则i和j的父节点为k位置的元素
