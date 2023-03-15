@@ -3,36 +3,52 @@
 #include <mutex>
 #include <condition_variable>
 
-int increase(int *p, int nums, std::mutex& mutex)
+void insert(std::string& s, std::mutex& mutex)
 {
-    for (int i = 0; i < nums; i++)
+    for (int i = 1; i <= 10; i++)
     {
-        mutex.lock();
-        (*p)++;
-        mutex.unlock();
+        /* 线程1 执行到该作用域后加锁
+         * 当出了该作用域才会释放锁
+         * 否则其他线程无法访问 s 变量
+         */
+        std::lock_guard<std::mutex> guard(mutex);
+        s.push_back((char)('a' + i - 1));
+        std::cout << "str: " << s << std::endl;
     }
-    return 0;
+}
+void pop(std::string& s, std::mutex& mutex)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        /* 当线程2 进入该作用域后
+         * 如果线程1 没有释放mutex
+         * 则线程2 会阻塞
+         */
+        std::lock_guard<std::mutex> guard(mutex);
+        std::cout << "str: " << s << std::endl;
+        s.pop_back();
+    }
 }
 
 int main(int argc, char* argv[])
 {
-    int num = 0;
+    std::string s;
+
+    /* 线程1 和 2使用同一个mutex */
     std::mutex mutex;
 
-    std::thread t1([&](){
-        increase(&num, 10000, mutex);
+    /* 线程1 开始 */
+    std::thread th1([&]() {
+        insert(s, mutex);
     });
-    std::thread t2([&](){
-        for (int i = 0; i < 10000; i++)
-        {
-            mutex.lock();
-            num++;
-            mutex.unlock();
-        }
+    /* 线程2 开始 */
+    std::thread th2([&](){
+        pop(s, mutex);
     });
-    t1.join();
-    t2.join();
-    std::cout << "num = " << num << std::endl;
+
+    /* 阻塞等待线程1 和线程2 结束 */
+    th1.join();
+    th2.join();
 
     return 0;
 }
