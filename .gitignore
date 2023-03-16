@@ -6,8 +6,8 @@
 /lib/dynamiclib/build
 /lib/sharedlib/build
 
-/dp/tree/build
-/dp/array/build
-/dp/map/build
+/ds/tree/build
+/ds/map/build
+/ds/array/build
 
 /thread/build
