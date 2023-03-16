@@ -1,11 +1,10 @@
 /.vscode
 /.vs
 
-/build
-/xlog/build
-/test_xlog/build
-/dynamiclib/build
-/sharedlib/build
+/lib/staticlib/xlog/build
+/lib/staticlib/test_xlog/build
+/lib/dynamiclib/build
+/lib/sharedlib/build
 
 /dp/tree/build
 /dp/array/build

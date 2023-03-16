@@ -14,7 +14,7 @@ void worker()
 {
     /* 线程加锁
      * wait主动解锁并进入阻塞
-     * 等待notify
+     * 等待notif以及确认ready才继续执行
      */
     std::unique_lock<std::mutex> lk(mtx);
     cv.wait(lk, []{ return ready; });

@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.23)
 
 project(xlog)
 
 # 添加头文件
-include_directories("../xlog")
+include_directories("xlog")
 
 # 生成动态库，cmake自动添加xlog_EXPORTS预处理
 add_library(xlog SHARED xlog/xlog.cpp)
