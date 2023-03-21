@@ -10,8 +10,8 @@
 /ds/map/build
 /ds/array/build
 
-/c++11/thread/build
-/c++11/auto/build
+/modern_c++/thread/build
+/modern_c++/auto/build
 
 /fstream/build
 /fstream/data.txt
