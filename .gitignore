@@ -16,5 +16,5 @@
 /fstream/build
 /fstream/data.txt
 
-/web/socket/server/build
-/web/socket/client/build
+/network_program/socket/server/build
+/network_program/socket/client/build
