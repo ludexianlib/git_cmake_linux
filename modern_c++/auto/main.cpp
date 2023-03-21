@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <functional>
 
 // auto会根据decltype推导出的类型确定
 template<class T, class U>
@@ -48,8 +49,7 @@ int main()
 
     int x = 3;
     TestRef(3);
-    TestRef(std::forward<int&>(x));
-    TestRef(std::forward<int>(x));
+    TestRef(x);
 
     return 0;
 }
