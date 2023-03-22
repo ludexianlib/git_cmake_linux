@@ -12,6 +12,7 @@
 
 /modern_c++/thread/build
 /modern_c++/auto/build
+/modern_c++/knowledge/build
 
 /fstream/build
 /fstream/data.txt
