@@ -38,6 +38,42 @@ void TestRef(T&& x) { LeftRightRef(std::forward<T>(x)); }
     LeftRightRef(std::move(x)); // 3: int&&
 }*/
 
+// constexpr -> 出现volatile则不能编译时计算
+constexpr int factorial(int n) {
+    return n <= 1? 1: (n * factorial(n - 1));
+}
+struct Struct{
+    constexpr Struct(char* name_) : name(name_) {}
+    const char* name;
+};
+
+// 列表初始化
+template<class T>
+struct Initializer
+{
+    std::vector<T> data;
+    Initializer(std::initializer_list<T> list)
+    {
+        for (const auto& it : list)
+        {
+            data.push_back(it);
+        }
+    }
+};
+
+// for (auto i: vector)
+// nullptr
+// final && override
+// default && delete
+// explicit
+// enum class
+
+// 自定义面量: 
+typedef unsigned long long int ulint;
+constexpr ulint operator"" _mm(ulint x){ return x; }
+constexpr ulint operator"" _cm(ulint x){ return x * 10; }
+constexpr ulint operator"" _m(ulint x){ return x * 1000; }
+
 int main()
 {
     int ret = Add<int, int>(5, 6);
@@ -50,6 +86,11 @@ int main()
     int x = 3;
     TestRef(3);
     TestRef(x);
+
+    Initializer<int> data = {1, 2, 3, 4};
+
+    ulint lt = 30_mm;
+    lt = 30_m;
 
     return 0;
 }
