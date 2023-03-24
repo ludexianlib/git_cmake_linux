@@ -9,6 +9,8 @@
 #include <unistd.h>
 #endif
 
+// 不使用cmake编译: g++ read.cpp -g -o ./build/read -D __linux__
+
 int main(int argc, char* argv[])
 {
 
