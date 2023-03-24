@@ -4,6 +4,7 @@
 
 #ifdef __linux__
 
+#include <sys/wait.h>
 #include <unistd.h>
 
 #endif
@@ -67,7 +68,7 @@ int main(int argc, char* argv[])
             }
         }
 
-        if (waitpid(id, 0, NULL) != -1)
+        if (waitpid(id, nullptr, 0) != -1)
         {
             printf("wait success.\n");
         }
