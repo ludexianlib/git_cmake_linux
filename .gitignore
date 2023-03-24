@@ -25,4 +25,4 @@
 /ipc/pipe/build
 /ipc/sharedmemory/build
 /ipc/FIFO/build
-
+/ipc/msglist/build
