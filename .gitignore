@@ -23,6 +23,6 @@
 /network_program/socket/client/build
 
 /ipc/pipe/build
-/ipc/sharedmemory/build
+/ipc/sharememory/build
 /ipc/FIFO/build
 /ipc/msglist/build
