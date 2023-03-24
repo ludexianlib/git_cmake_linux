@@ -1,6 +1,8 @@
 /.vscode
 /.vs
 
+# 仓库地址: git@github.com:ludexianlib/git_cmake_linux.git
+
 /lib/staticlib/xlog/build
 /lib/staticlib/test_xlog/build
 /lib/dynamiclib/build
@@ -19,3 +21,5 @@
 
 /network_program/socket/server/build
 /network_program/socket/client/build
+
+/ipc/pipe/build
