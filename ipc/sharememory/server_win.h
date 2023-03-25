@@ -10,11 +10,14 @@ class CreateShareMemory
 {
 public:
     CreateShareMemory();
+    CreateShareMemory(MsgStruct msg);
     ~CreateShareMemory();
 
     MsgStruct* GetDataFromMemory();
     bool SendDataToMemory(MsgStruct* data);
 private:
+    void InitShareMemory();
+
     MsgStruct m_msg;
     HANDLE hMapFile;
     LPVOID lpBase;

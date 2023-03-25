@@ -2,6 +2,17 @@
 
 CreateShareMemory::CreateShareMemory()
 {
+    InitShareMemory();
+}
+
+CreateShareMemory::CreateShareMemory(MsgStruct msg)
+{
+    m_msg = msg;
+    InitShareMemory();
+}
+
+void CreateShareMemory::InitShareMemory()
+{
     // 创建共享文件句柄 
     hMapFile = CreateFileMapping(
 		INVALID_HANDLE_VALUE,           // 物理文件句柄
@@ -53,4 +64,23 @@ bool CreateShareMemory::SendDataToMemory(MsgStruct* data)
         return false;
     memcpy(lpBase, data, sizeof(*data));
     return true;
+}
+
+int main()
+{
+    MsgStruct msg;
+    msg.num = 10;
+    strcpy_s(msg.buf, "test!");
+    CreateShareMemory sh(msg);
+    
+    cout << "write data to share memory." << endl;
+    sh.SendDataToMemory(&msg);
+    Sleep(10000);
+    MsgStruct* pMsg = sh.GetDataFromMemory();
+    cout << "read data from share memory." << endl;
+    cout << pMsg->num << endl;
+    cout << pMsg->buf << endl;
+
+
+    return 0;
 }

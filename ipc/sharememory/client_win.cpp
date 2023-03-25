@@ -39,3 +39,19 @@ bool ConnectShareMemory::SendDataToMemory(MsgStruct* data)
     memcpy(lpBase, &m_msg, sizeof(m_msg));
     return &m_msg;
 }
+
+int main()
+{
+    ConnectShareMemory sh;
+    MsgStruct* msg = sh.GetDataFromMemory();
+    cout << msg->num << endl;
+    cout << msg->buf << endl;
+    Sleep(5000);
+    msg->num = 1000;
+    cout << "write data to share memory!" << endl;
+    strcpy_s(msg->buf, "this is message from connect!");
+    sh.SendDataToMemory(msg);
+
+
+    return 0;
+}
