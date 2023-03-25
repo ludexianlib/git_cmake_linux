@@ -1,36 +1,41 @@
-#include "type.h"
+#include "client_win.h"
 
-#include <windows.h>
-#include <iostream>
-using namespace std;
-
-#define BUF_SIZE 4096
-
-int main()
+ConnectShareMemory::ConnectShareMemory()
 {
-    MsgStruct msg;
-
-    HANDLE hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, NULL, L"ShareMemory");
+    hMapFile = OpenFileMapping(FILE_MAP_ALL_ACCESS, NULL, SHARE_MEMORY_NAME);
     if (hMapFile == nullptr)
     {
         cout << "打开映射文件失败." << endl;
-        return -1;
+        return;
     }
 
-    LPVOID lpBase = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+    lpBase = MapViewOfFile(hMapFile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     if (lpBase == nullptr)
     {
         cout << "获取映射区共享内存指针失败." << endl;
-        return -1;
+        return;
     }
-	
-    memcpy(&msg, lpBase, sizeof(msg));
+}
 
-    cout << "读取共享内存数据: " << msg.num << endl;
-    cout << "读取共享内存数据: " << msg.buf << endl;
-
+ConnectShareMemory::~ConnectShareMemory()
+{
     UnmapViewOfFile(lpBase);
     CloseHandle(hMapFile);
+}
 
-    return 0;
+MsgStruct* ConnectShareMemory::GetDataFromMemory()
+{
+    if (lpBase == nullptr)
+        return nullptr;
+    memcpy(&m_msg, lpBase, sizeof(m_msg));
+    return &m_msg;
+}
+
+bool ConnectShareMemory::SendDataToMemory(MsgStruct* data)
+{
+    m_msg = *data;
+    if (lpBase == nullptr)
+        return false;
+    memcpy(lpBase, &m_msg, sizeof(m_msg));
+    return &m_msg;
 }
