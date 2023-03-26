@@ -4,7 +4,9 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(PROJECT_NAME shm)
 project(${PROJECT_NAME})
-set(SRC_LIST shmfifo_linux.cpp)
+set(SRC_LIST shmfifo_linux.cpp,
+             put_linux.cpp
+)
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 elseif(WIN32)

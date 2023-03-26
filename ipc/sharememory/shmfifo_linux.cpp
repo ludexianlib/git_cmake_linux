@@ -33,22 +33,37 @@ shmfifo_t* shmfifo_init(int key, int blocks, int blksz)
 	shmfifo_t *p = (shmfifo_t*)malloc(sizeof(shmfifo_t));
 	assert(p);
 
+	// head_t + 3 * person_t
 	int len = blocks * blksz + sizeof(head_t);
+	
+	// 根据标识符 key 和共享内存长度 len 创建共享内存
 	int shmid = shmget(key, len, 0);
 	if ( shmid == -1 ) { // 不存在，创建
 		shmid = shmget(key, len, IPC_CREAT | 0644);
-		if ( shmid == -1 ) perror("shmget"), exit(1);
+		if ( shmid == -1 ) 
+		{
+			perror("shmget");
+			exit(1);
+		}
+
+		// 将进程 attach 到共享内存，返回指向共享内存的指针
 		p->p_head = (head_t*)shmat(shmid, NULL, 0);
+
 		p->p_head->rd_idx = 0;
 		p->p_head->wr_idx = 0;
-		p->p_head->blocks = blocks;
-		p->p_head->blksz  = blksz;
-		p->p_payload = (char*)(p->p_head + 1);
+		p->p_head->blocks = blocks; // 3
+		p->p_head->blksz  = blksz; 	// person_t
+
+		p->p_payload = (char*)(p->p_head + 1); // 有效数据地址：起始地址+1
 		p->shmid = shmid;
+		
+		// 返回信号集的表示码
 		p->sem_empty = semget(key, 1, IPC_CREAT | 0644);
 		p->sem_full  = semget(key + 1, 1, IPC_CREAT | 0644);
 		p->sem_mutex = semget(key + 2, 1, IPC_CREAT | 0644);
+
 		union semun su;
+
 		su.value = 0;
 		semctl(p->sem_empty, 0, SETVAL, su);
 		su.value = blocks;
@@ -59,9 +74,10 @@ shmfifo_t* shmfifo_init(int key, int blocks, int blksz)
 		p->p_head = (head_t*)shmat(shmid, NULL, 0);
 		p->p_payload = (char*)(p->p_head + 1);
 		p->shmid = shmid;
+
 		p->sem_empty = semget(key, 0, 0);
-		p->sem_full  = semget(key+1, 0, 0);
-		p->sem_mutex = semget(key+2, 0, 0);
+		p->sem_full  = semget(key + 1, 0, 0);
+		p->sem_mutex = semget(key + 2, 0, 0);
 	}
 
 	return p;
