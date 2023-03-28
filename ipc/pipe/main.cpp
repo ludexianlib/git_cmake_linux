@@ -23,7 +23,10 @@ int main(int argc, char* argv[])
     }
     printf("create_pipe[0] is %d, create_pipe[1] is %d\n", create_pipe[0], create_pipe[1]);
     
-    pid_t id = fork(); // 父进程fork子进程
+    // 父进程fork子进程
+    // 父进程返回子进程的id号
+    // 子进程返回0
+    pid_t id = fork();
     if (id < 0)
     {
         perror("fork error.");
@@ -68,6 +71,7 @@ int main(int argc, char* argv[])
             }
         }
 
+        // 等待子进程结束-> waiting 子进程结束-> ready
         if (waitpid(id, nullptr, 0) != -1)
         {
             printf("wait success.\n");

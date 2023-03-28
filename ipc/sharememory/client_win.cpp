@@ -37,7 +37,7 @@ bool ConnectShareMemory::SendDataToMemory(MsgStruct* data)
     if (lpBase == nullptr)
         return false;
     memcpy(lpBase, &m_msg, sizeof(m_msg));
-    return &m_msg;
+    return true;
 }
 
 int main()
