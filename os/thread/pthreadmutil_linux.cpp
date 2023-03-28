@@ -5,11 +5,13 @@
 #include <time.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
 
 void* pthread_func(void* args)
 {
     int inner_points = 0;
-    int total_points = *((int*)args);
+    int total_points = pow(*((int*)args), 2);
 
     unsigned int seed = time(NULL);
     
@@ -42,8 +44,11 @@ int main(int argc, char* argv[])
 
     for (int i = 0; i < 10; i++)
     {
-        pthread_join(tid + i, NULL);
+        pthread_join(tid[i], NULL);
     }
+
+    interval = clock() - start;
+    printf("The tasks used time in %lf seconds\n", (double)interval / CLOCKS_PER_SEC);
 
     return 0;
 }
