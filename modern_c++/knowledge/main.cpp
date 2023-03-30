@@ -24,8 +24,7 @@ int main()
     float ry = *(float*)((ucharptr)&m + 4);
     
     char rd[256] = { 0 };
-    for (int i = 0; i < 256; i++)
-        rd[i] = *(char*)((ucharptr)&m + 4 + 4 + i);
+    memcpy(rd, (ucharptr)&m + 4 + 4, 256);
 
     std::cout << rx << std::endl;
     std::cout << ry << std::endl;

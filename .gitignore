@@ -3,26 +3,5 @@
 
 # 仓库地址: git@github.com:ludexianlib/git_cmake_linux.git
 
-/lib/staticlib/xlog/build
-/lib/staticlib/test_xlog/build
-/lib/dynamiclib/build
-/lib/sharedlib/build
-
-/ds/tree/build
-/ds/map/build
-/ds/array/build
-
-/modern_c++/thread/build
-/modern_c++/auto/build
-/modern_c++/knowledge/build
-
-/fstream/build
-/fstream/data.txt
-
-/network_program/socket/server/build
-/network_program/socket/client/build
-
-/ipc/pipe/build
-/ipc/sharememory/build
-/ipc/FIFO/build
-/ipc/msglist/build
+# 忽略所有build目录
+build/
