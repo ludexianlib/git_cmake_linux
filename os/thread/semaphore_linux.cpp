@@ -43,7 +43,7 @@ int main()
     }
     printf("titck number: %d\n", titck_num);
 
-    sem_destory(&mutex); // 释放资源
+    sem_destroy(&mutex); // 释放资源
 
     return 0;
 }
