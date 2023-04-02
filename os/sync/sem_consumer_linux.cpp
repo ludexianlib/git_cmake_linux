@@ -25,7 +25,7 @@ void* producer_thread(void* args)
         in = (in + 1) % K;          // 相当于循环队列
         sem_post(&mutex);
 
-        sem_post(&full);            // 缓冲区资源已增加
+        sem_post(&full);            // 缓冲区资源已增加+
 
         sleep(1);
         if (num++ == 2)
@@ -48,7 +48,7 @@ void* consumer_thread(void* args)
         out = (out + 1) % K;        // 相当于循环队列
         sem_post(&mutex);
 
-        sem_post(&empty);            // 缓冲区资源已增加
+        sem_post(&empty);           // 缓冲区资源已读取-
         
         sleep(1);
         if (num++ == 2)
