@@ -1,0 +1,12 @@
+1.换源：修改/etc/apt/sources.list
+        更新-> sudo apt-get update
+2.安装gcc/g++: sudo apt-get install build-essential
+3.更新cmake: wget cmake-url
+        解压-> tar -xf cmake.tar.gz
+        软链接-> sudo ln -s /download_cmake_path /usr/bin/cmake
+4.vim:
+    G: 行末
+    :1, .d 全删
+
+    3yy 复制三行
+    3dd 剪切三行
