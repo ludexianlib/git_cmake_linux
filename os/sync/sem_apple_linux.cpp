@@ -10,34 +10,60 @@ sem_t mutex;            // 盘子只能放一个水果
 
 void* pthread_father(void* args)
 {
-    sem_wait(&mutex);           // 盘子是否为空
-    printf("爸爸在盘子中放了一个苹果\n");
-    sem_post(&apple);           // 盘子放了苹果
+    int num = 0;
+    while (true)
+    {
+        sem_wait(&mutex);           // 盘子是否为空
+        printf("爸爸在盘子中放了一个苹果\n");
+        sem_post(&apple);           // 盘子放了苹果
+        if (num++ == 2)
+            break;
+    }
     
     pthread_exit(0);
 }
 void* pthread_mother(void* args)
 {
-    sem_wait(&mutex);           // 盘子是否为空
-    printf("妈妈在盘子中放了一个橘子\n");
-    sem_post(&orange);          // 盘子放了橘子
+    int num = 0;
+    while (true)
+    {
+        sem_wait(&mutex);           // 盘子是否为空
+        printf("妈妈在盘子中放了一个橘子\n");
+        sem_post(&orange);          // 盘子放了橘子
+
+        if (num++ == 2)
+            break;
+    }
 
     pthread_exit(0);
 }
 void* pthread_son(void* args)
 {
-    sem_wait(&orange);          // 盘子是否有橘子
-    printf("儿子从盘子中取走了一个橘子\n");
-    sem_post(&mutex);           // 盘子已空
-    
+    int num = 0;
+    while (true)
+    {
+        sem_wait(&orange);          // 盘子是否有橘子
+        printf("儿子从盘子中取走了一个橘子\n");
+        sem_post(&mutex);           // 盘子已空
+
+        if (num++ == 2)
+            break;
+    }
+
     pthread_exit(0);
 }
 void* pthread_daughter(void* args)
 {
-    sem_wait(&apple);           // 盘子是否有苹果
-    printf("女儿从盘子中取走了一个苹果\n");
-    sem_post(&mutex);           // 盘子已空
+    int num = 0;
+    while (true)
+    {
+        sem_wait(&apple);           // 盘子是否有苹果
+        printf("女儿从盘子中取走了一个苹果\n");
+        sem_post(&mutex);           // 盘子已空
 
+        if (num++ == 2)
+            break;
+    }
     pthread_exit(0);
 }
 
