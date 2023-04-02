@@ -22,7 +22,7 @@ void* thread_func(void* args)
     titck_num = t;
     // 解锁
     pthread_mutex_unlock(&lock);
-
+    pthread_exit(0);
 }
 
 int main()
