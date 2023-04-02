@@ -43,8 +43,8 @@ int main()
     create_pthread(&pdriver, NULL, driver_thread, NULL);
     create_pthread(&pseller, NULL, seller_thread, NULL);
 
-    pthread_join(pdriver);
-    pthread_join(pseller);
+    pthread_join(pdriver, NULL);
+    pthread_join(pseller, NULL);
 
     sem_destroy(&driver); // 释放信号量资源
     sem_destroy(&seller);
