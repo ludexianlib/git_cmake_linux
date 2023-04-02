@@ -12,8 +12,11 @@ void* driver_thread(void* args)
 {
     sem_wait(&driver);    // 等待->关闭车门
     printf("启动车辆\n");
+    sleep(1);
     printf("正常开车\n");
+    sleep(1);
     printf("到站停车\n");
+    sleep(1);
 
     sem_post(&seller);   // seller可用资源+
     pthread_exit(0);
@@ -24,7 +27,9 @@ void* seller_thread(void* args)
     printf("关闭车门\n");
     sem_post(&driver);   // driver可用资源+
 
+    sleep(1);
     printf("正常售票\n");
+    sleep(1);
 
     sem_wait(&seller);
     printf("打开车门\n"); // 等待->到站停车
