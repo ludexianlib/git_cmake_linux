@@ -40,8 +40,8 @@ int main()
     pthread_t pdriver;
     pthread_t pseller;
 
-    create_pthread(&pdriver, NULL, driver_thread, NULL);
-    create_pthread(&pseller, NULL, seller_thread, NULL);
+    pthread_create(&pdriver, NULL, driver_thread, NULL);
+    pthread_create(&pseller, NULL, seller_thread, NULL);
 
     pthread_join(pdriver, NULL);
     pthread_join(pseller, NULL);
