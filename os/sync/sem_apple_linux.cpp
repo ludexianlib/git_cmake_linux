@@ -62,19 +62,6 @@ int main()
     pthread_join(pson, NULL);
     pthread_join(pdaughter, NULL);
 
-    pthread_t producers[10];
-    pthread_t consumers[10];
-    for (int i = 0; i < 10; i++)
-    {
-        pthread_create(producers + i, NULL, producer_thread, NULL);
-        pthread_create(consumers + i, NULL, consumer_thread, NULL);
-    }
-    for (int i = 0; i < 10; i++)
-    {
-        pthread_join(producers[i], NULL);
-        pthread_join(consumers[i], NULL);
-    }
-
     sem_destroy(&apple);
     sem_destroy(&orange);
     sem_destroy(&mutex);
