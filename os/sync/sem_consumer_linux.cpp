@@ -21,6 +21,7 @@ void* producer_thread(void* args)
 
         sem_wait(&mutex);           // 互斥资源是否可用
         buf[in] = rand() % 1000;    // 随机生成整数放入缓冲区
+        printf("线程号[%u] 生产: %d\n", pthread_self(), buf[in]);
         in = (in + 1) % K;          // 相当于循环队列
         sem_post(&mutex);
 
@@ -43,7 +44,7 @@ void* consumer_thread(void* args)
 
         sem_wait(&mutex);           // 互斥资源是否可用
         int get = buf[out];         // 随机生成整数放入缓冲区
-        printf("get data from buf[%d]: %d\n", out, get);
+        printf("线程号[%u] 从buf[%d] 获取数据: %d\n", pthread_self(), out, get);
         out = (out + 1) % K;        // 相当于循环队列
         sem_post(&mutex);
 
