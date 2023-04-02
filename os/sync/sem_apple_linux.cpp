@@ -12,7 +12,7 @@ void* pthread_father(void* args)
 {
     sem_wait(&mutex);           // 盘子是否为空
     printf("爸爸在盘子中放了一个苹果\n");
-    sen_post(&mutex);
+    sem_post(&mutex);
 
     sem_post(&apple);           // 盘子放了苹果
     
@@ -31,6 +31,7 @@ void* pthread_mother(void* args)
 void* pthread_son(void* args)
 {
     sem_wait(&orange);          // 盘子是否有橘子
+    
     printf("儿子从盘子中取走了一个橘子\n");
 
     sem_post(&mutex);           // 盘子已空
