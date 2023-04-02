@@ -58,9 +58,9 @@ int main()
     pthread_t pdaughter;
 
     pthread_create(&pfather, NULL, pthread_father, NULL);
-    pthread_create(&pmother, NULL, pthread_father, NULL);
-    pthread_create(&pson, NULL, pthread_father, NULL);
-    pthread_create(&pdaughter, NULL, pthread_father, NULL);
+    pthread_create(&pmother, NULL, pthread_mother, NULL);
+    pthread_create(&pson, NULL, pthread_son, NULL);
+    pthread_create(&pdaughter, NULL, pthread_daughter, NULL);
 
     pthread_join(pfather, NULL);
     pthread_join(pmother, NULL);
