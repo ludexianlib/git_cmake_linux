@@ -13,13 +13,15 @@ sem_t mutex;        // 互斥waiting
 
 void* customer_thread(void* args)
 {
+    sleep(1);
+    
     sem_wait(&mutex);       // waiting互斥资源上锁
     if (waiting < WAITING_MAX)
     {
         waiting++;
         sem_post(&mutex);   // 释放互斥资源
 
-        printf("waiting num: %d\n", waiting - 1);
+        printf("waiting num: %d\n", waiting);
 
         sem_wait(&berber);  // 等待理发师
         sem_post(&customer);    // 顾客资源增加
@@ -36,15 +38,19 @@ void* customer_thread(void* args)
 
 void* berber_thread(void* args)
 {
-    while (waiting != 0)
+    while (true)
     {
         sem_wait(&customer);    // 等待顾客资源
         sem_wait(&mutex);      // 修改等待位置数量
         waiting--;
         sem_post(&mutex);       // 释放互斥资源
         
+        printf("waiting num: %d\n", waiting);
         printf("berber is working.\n");
         sem_post(&berber);      // 理发师空闲
+
+        printf("berber work end.\n");
+        sleep(1);
     }
 
     pthread_exit(0);
@@ -54,7 +60,7 @@ int main()
 {
     sem_init(&customer, 0, 0);      // 初始化顾客为0
     sem_init(&berber, 0, 1);        // 初始化berber有空
-    sem_init(&mutex, 0, 1);         // 互斥资源为0
+    sem_init(&mutex, 0, 1);         // 互斥资源为1
 
     pthread_t pcustomers[10];
     pthread_t pberber;
