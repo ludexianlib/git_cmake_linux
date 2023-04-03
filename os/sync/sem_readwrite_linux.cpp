@@ -19,7 +19,7 @@ void* reader_thread(void* args)
 
     sem_post(&rmutex);  // 可以释放多读者变量
 
-    printf("reading file: flag = %d.\n", *(int*)flag);
+    printf("reading file: flag = %d.\n", flag);
 
     sem_wait(&rmutex);  // 修改多读者信号量
     readers--;
@@ -33,7 +33,7 @@ void* reader_thread(void* args)
 void* writer_thread(void* args)
 {
     sem_wait(&rw);  // 获取读写资源
-    printf("writing file: flag = %d.\n", ++(*(int*)flag));
+    printf("writing file: flag = %d.\n", ++flag);
     sem_post(&rw);  // 释放读写资源
     
     pthread_exit(0);
@@ -49,9 +49,9 @@ int main()
 
     // 创建线程
     for (int i = 0; i < 3; i++)
-        pthread_create(writers + i, NULL, writer_thread, &flag);
+        pthread_create(writers + i, NULL, writer_thread, NULL);
     for (int i = 0; i < 5; i++)
-        pthread_create(readers + i, NULL, reader_thread, &flag);
+        pthread_create(readers + i, NULL, reader_thread, NULL);
 
     // 等待线程结束
     for (int i = 0; i < 3; i++)
