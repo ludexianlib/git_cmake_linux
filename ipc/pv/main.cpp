@@ -108,7 +108,7 @@ int main()
     {
         // fork子进程中返回0
         sleep(2);
-        printf("process child: pid = %ld\n", getpid());
+        printf("process child: pid = %d\n", getpid());
         sem_v(sem_id);
     }
     else
@@ -117,9 +117,9 @@ int main()
 
         // 等待子进程v操作
         sem_p(sem_id);
-        printf("process father: pid = %ld\n", getpid());
+        printf("process father: pid = %d\n", getpid());
         sem_v(sem_id);
-        del_sem(sem_id);
+        sem_del(sem_id);
     }
 
     return 0;
