@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "shmfifo_linux.h"
 
+// 传输的数据结构体
 typedef struct {
 	int age;
 	char name[32];
