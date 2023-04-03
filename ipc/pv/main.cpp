@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/sem.h>
 
 /*
@@ -85,14 +86,14 @@ int main()
     key_t key;
     pid_t pid;
 
-    if ((key = ftok(".", 'z')) < =)
+    if ((key = ftok(".", 'z')) < 0)
     {
         perror("ftok error.");
         exit(1);
     }
 
     // 创建一个信号量的信号集
-    if ((sem_id = semget(key 1, IPC_CREAT | 0666)) == -1)
+    if ((sem_id = semget(key, 1, IPC_CREAT | 0666)) == -1)
     {
         perror("create sem error.");
         exit(1);
