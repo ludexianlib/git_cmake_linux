@@ -16,6 +16,7 @@ int main()
     key_t key;
     Msg msg;
 
+    // ftok根据路径和节点生成唯一标识符
     if ((key = ftok(MSG_FILE, 'z')) < 0)
     {
         perror("ftok error");

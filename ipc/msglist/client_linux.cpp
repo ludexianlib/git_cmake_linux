@@ -16,6 +16,7 @@ int main()
     key_t key;
     Msg msg;
 
+    // ftok根据路径和节点生成唯一标识符
     if ((key = ftok(MSG_FILE, 'z')) < 0)
     {
         perror("ftok error");
@@ -41,7 +42,7 @@ int main()
     msgsnd(msqid, &msg, sizeof(msg.mtext), 0);
 
     // 接受999类型消息
-    msgrcv(msqid, &msg, 257, 999, 0);
+    msgrcv(msqid, &msg, 256, 999, 0);
 
     printf("Client: receive msg.mtext is: %s.\n", msg.mtext);
     printf("Client: receive msg.mtype is: %ld.\n", msg.mtype);
