@@ -19,6 +19,8 @@ void* customer_thread(void* args)
         waiting++;
         sem_post(&mutex);   // 释放互斥资源
 
+        printf("waiting num: %d\n", waiting - 1);
+
         sem_wait(&berber);  // 等待理发师
         sem_post(&customer);    // 顾客资源增加
         printf("customer get haircut.\n");
@@ -34,6 +36,17 @@ void* customer_thread(void* args)
 
 void* berber_thread(void* args)
 {
+    while (waiting != 0)
+    {
+        sem_wait(&customer);    // 等待顾客资源
+        sem_wait(&mutex);      // 修改等待位置数量
+        waiting--;
+        sem_post(&mutex);       // 释放互斥资源
+        
+        printf("berber is working.\n");
+        sem_post(&berber);      // 理发师空闲
+    }
+    
     sem_wait(&customer);    // 等待顾客资源
     sem_wait(&mutex);      // 修改等待位置数量
     waiting--;
