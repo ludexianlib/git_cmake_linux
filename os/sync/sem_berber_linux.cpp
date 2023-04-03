@@ -46,14 +46,6 @@ void* berber_thread(void* args)
         printf("berber is working.\n");
         sem_post(&berber);      // 理发师空闲
     }
-    
-    sem_wait(&customer);    // 等待顾客资源
-    sem_wait(&mutex);      // 修改等待位置数量
-    waiting--;
-    sem_post(&mutex);       // 释放互斥资源
-    
-    printf("berber is working.\n");
-    sem_post(&berber);      // 理发师空闲
 
     pthread_exit(0);
 }
