@@ -51,18 +51,18 @@ int main()
     sem_init(&berber, 0, 1);        // 初始化berber有空
     sem_init(&mutex, 0, 1);         // 互斥资源为0
 
-    pthread_t customers[10];
-    pthread_t berber;
+    pthread_t pcustomers[10];
+    pthread_t pberber;
 
     // 创建线程
     for (int i = 0; i < 10; i++)
-        pthread_create(customers + i, NULL, customer_thread, NULL);
-    pthread_create(&berber, NULL, berber_thread, NULL);
+        pthread_create(pcustomers + i, NULL, customer_thread, NULL);
+    pthread_create(&pberber, NULL, berber_thread, NULL);
 
     // 等待线程结束
     for (int i = 0; i < 10; i++)
-        pthread_join(customers[i], NULL);
-    pthread_join(berber, NULL);
+        pthread_join(pcustomers[i], NULL);
+    pthread_join(pberber, NULL);
 
     sem_destroy(&customer);
     sem_destroy(&berber);
