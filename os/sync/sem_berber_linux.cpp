@@ -29,24 +29,27 @@ void* customer_thread(void* args)
         printf("customer leaving.\n");
     }
 
+    pthread_exit(0);
 }
 
 void* berber_thread(void* args)
 {
     sem_wait(&customer);    // 等待顾客资源
-    sem_mutex(&mutex);      // 修改等待位置数量
+    sem_wait(&mutex);      // 修改等待位置数量
     waiting--;
     sem_post(&mutex);       // 释放互斥资源
     
     printf("berber is working.\n");
     sem_post(&berber);      // 理发师空闲
+
+    pthread_exit(0);
 }
 
 int main()
 {
     sem_init(&customer, 0, 0);      // 初始化顾客为0
     sem_init(&berber, 0, 1);        // 初始化berber有空
-    sem_itit(&mutex, 0, 1);         // 互斥资源为0
+    sem_init(&mutex, 0, 1);         // 互斥资源为0
 
     pthread_t customers[10];
     pthread_t berber;
@@ -61,9 +64,9 @@ int main()
         pthread_join(customers[i], NULL);
     pthread_join(berber, NULL);
 
-    sem_destroy(&customer, NULL);
-    sem_destroy(&berber, NULL);
-    sem_destroy(&mutex, NULL);
+    sem_destroy(&customer);
+    sem_destroy(&berber);
+    sem_destroy(&mutex);
 
     return 0;
 }
