@@ -10,10 +10,10 @@ void* philosopher_thread(void* args)
 {
     while (true)
     {
-        printf("thinking.\n");
+        printf("num: %d thinking.\n", *(int*)args);
         sem_wait(&chopstick[*(int*)args]);       // 必须拿到左右两边筷子
         sem_wait(&chopstick[(*(int*)args + 1) % 5]);
-        printf("eating.\n");
+        printf("num: %d eating.\n", *(int*)args);
         sem_post(&chopstick[*(int*)args]);
         sem_post(&chopstick[(*(int*)args + 1) % 5]);
         sleep(1);
