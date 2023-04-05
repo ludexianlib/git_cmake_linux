@@ -28,7 +28,7 @@ int main()
 
     pthread_t p[5];
     for (int i = 0; i < 5; i++)
-        pthread_create(p + i, NULL, philosopher_thread, i);
+        pthread_create(p + i, NULL, philosopher_thread, &i);
     for (int i = 0; i < 5; i++)
         pthread_join(p[i], NULL);
 
