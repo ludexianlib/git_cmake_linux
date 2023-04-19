@@ -8,18 +8,15 @@ public:
      * 在读取时通过sizeof(Struct)才争取读取
      */
     char str[20] = {0};
-    int num;
+    int num[5];
 };
 
 int main()
 {
     Struct s;
-    std::string t = "write!";
-    for (int i = 0; i < t.size(); i++)
-    {
-        s.str[i] = t[i];
-    }
-    s.num = 20;
+    memcpy((char*)&s, "string.", sizeof("string."));
+    int i = 20;
+    memcpy((char*)&s + 20, &i, sizeof(int));
 
     /* 二进制写 */
     std::ofstream ofs;
@@ -33,7 +30,7 @@ int main()
     if (ins.is_open())
     {
         ins.read((char*)&s, sizeof(s));
-        std::cout << s.str << " " << s.num << std::endl;
+        std::cout << s.str << " " << s.num[0] << std::endl;
         std::cout << ins.tellg() << std::endl;
     }
     ins.close();

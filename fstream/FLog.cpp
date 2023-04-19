@@ -10,7 +10,6 @@ bool FLog::Write(std::string str)
     file.open(path, std::ios::out | std::ios::app);
     if (str.empty())
         return false;
-    str.append("\n");
     file << str;
     file.close();
     return true;
@@ -54,16 +53,15 @@ int main()
 {
     time_t now = time(nullptr);
 	tm* pnow = localtime(&now);
-	std::string cur;
-	cur += std::to_string(pnow->tm_year + 1900) + "-";
-	cur += std::to_string(pnow->tm_mon + 1) + "-";
-	cur += std::to_string(pnow->tm_mday) + " ";
-	
-	cur += std::to_string(pnow->tm_hour) + ":";
-	cur += std::to_string(pnow->tm_min) + ":";
-	cur += std::to_string(pnow->tm_sec);
-
-    FLog::Write(cur);
+    char buf[256];
+    sprintf(buf, "%4d-%02d-%02d %02d:%02d:%02d\n", 
+        pnow->tm_year + 1900, 
+        pnow->tm_mon + 1, 
+        pnow->tm_mday,
+        pnow->tm_hour, 
+        pnow->tm_min, 
+        pnow->tm_sec);
+    FLog::Write(buf);
 
     return 0;
 }
