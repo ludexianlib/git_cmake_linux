@@ -10,3 +10,9 @@
 
     3yy 复制三行
     3dd 剪切三行
+
+g++:
+        static: g++ -c wrapper.cpp      // wrapper.o
+                ar rcs lib库名称.a wrapper.o
+        使用:   g++ -c main.cpp         // main.o
+                g++ -static main.o libwrapper.a
