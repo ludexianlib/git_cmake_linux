@@ -9,11 +9,11 @@ void* thread_func(void* argc)
     printf("This is sub thread.\n");
 }
 
-int main(int argc, char* argc[])
+int main(int argc, char* argv[])
 {
     pthread_t tid;
     pthread_create(&tid, NULL, thread_func, NULL);
-    pthread_join(&tid, NULL);
+    pthread_join(tid, NULL);
     printf("This is main thread.\n");
 
     return 0;
