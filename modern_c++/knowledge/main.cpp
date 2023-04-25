@@ -2,33 +2,33 @@
 #include <iostream>
 #include <string>
 
-using uchar = unsigned char;
-using ucharptr = unsigned char *;
+typedef unsigned char uchar, *ucharptr;
 
-struct M
+void AddressOffset()
 {
-    int x;
-    float y;
-    char d[256] = { 0 };
-};
+    // 指针变量运算
+    struct Msg {
+        int  num[128];
+        char buf[256];
+    }msg;
+    int x = 0x12345678;
+    memcpy((ucharptr)&msg + 4, &x, sizeof(int));
+
+    ucharptr cx = (ucharptr)&msg;
+    printf("%x %x %x %x\n", *(cx + 4), *(cx + 5), *(cx + 6), *(cx + 7));
+}
+
+void SetRGB(uchar r, uchar g, uchar b) 
+{
+    // 位运算
+    int rgb = (r << 16 & 0xFF0000) | (g << 8 & 0xFF00) | (b & 0xFF);
+    printf("rgb: 0x%x\n", rgb);
+}
 
 int main()
 {
-    // 通过结构体地址偏移获取数据
-    M m;
-    m.x = 1;
-    m.y = 1.23456f;
-    strcpy_s(m.d, "test");
-
-    int rx = *(int*)((ucharptr)&m);
-    float ry = *(float*)((ucharptr)&m + 4);
-    
-    char rd[256] = { 0 };
-    memcpy(rd, (ucharptr)&m + 4 + 4, 256);
-
-    std::cout << rx << std::endl;
-    std::cout << ry << std::endl;
-    std::cout << rd << std::endl;
+    AddressOffset();
+    SetRGB(0, 128, 255);
 
     return 0;
 }
