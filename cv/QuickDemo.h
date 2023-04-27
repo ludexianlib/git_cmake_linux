@@ -26,6 +26,8 @@ public:
 	void PolylineDrawing();
 
 	void MouseDrawingDemo(cv::Mat& img);
+	void NormalizeDemo(cv::Mat& img);
+	void ResizeDemo(cv::Mat& img);
 private:
 	static cv::Mat temp;
 	static cv::Point startPoint;

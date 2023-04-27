@@ -379,3 +379,31 @@ void QuickDemo::MouseDrawingDemo(cv::Mat& img)
 	cv::imshow("mouse_event", img);
 	temp = img.clone();
 }
+
+void QuickDemo::NormalizeDemo(cv::Mat& img)
+{
+	// 数据归一化
+	cv::Mat dst;
+	img.convertTo(img, CV_32F);
+	printf("convert 32f img channel: %d\n", img.channels());
+	std::cout << "pixel value: " << img.at<cv::Vec3f>(0, 1) << std::endl;
+	printf("pixel value: %f\n", img.at<float>(0, 3));
+	printf("pixel value: %f\n", img.at<float>(0, 4));
+	printf("pixel value: %f\n", img.at<float>(0, 5));
+	cv::normalize(img, dst, 1.0, 0.0, cv::NORM_MINMAX);
+	cv::imshow("normalize", dst);
+}
+
+void QuickDemo::ResizeDemo(cv::Mat& img)
+{
+	// 缩放图像
+	cv::Mat zoomIn, zoomOut;
+	int rows = img.rows;
+	int cols = img.cols;
+	std::cout << (double)rows / 1.5 << std::endl;
+	std::cout << rows / 1.5 << std::endl;
+	cv::resize(img, zoomIn, cv::Size2d(rows / 1.5, cols / 1.5), 0, 0, cv::INTER_LINEAR);
+	cv::resize(img, zoomOut, cv::Size2d(rows * 1.2, cols * 1.2), 0, 0, cv::INTER_LINEAR);
+	cv::imshow("zoom in", zoomIn);
+	cv::imshow("zoom out", zoomOut);
+}
