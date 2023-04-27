@@ -1,6 +1,7 @@
 ﻿#include "QuickDemo.h"
 #include <iostream>
 #include <vector>
+#include <unordered_map>
 
 void QuickDemo::ColorSpaceDemo(cv::Mat& img)
 {
@@ -14,9 +15,15 @@ void QuickDemo::ColorSpaceDemo(cv::Mat& img)
 
 void QuickDemo::CreateMatDemo()
 {
+
 	// 设置窗口属性
+#if (CV_VERSION_MAJOR == 4)
+	cv::namedWindow("128_0_128.png", cv::WINDOW_NORMAL);
+	cv::namedWindow("0_128_128.png", cv::WINDOW_NORMAL);
+#else (CV_VERSION_MAJOR == 3)
 	cv::namedWindow("128_0_128.png", CV_WINDOW_NORMAL);
 	cv::namedWindow("0_128_128.png", CV_WINDOW_NORMAL);
+#endif // CV_VERSION_MAJOR
 
 	cv::Mat src = cv::Mat::ones(cv::Size(128, 128), CV_8UC3);
 	src = cv::Scalar(128, 0, 128);
@@ -122,12 +129,20 @@ void QuickDemo::KeyEventDemo(cv::Mat& img)
 		else if (key == 0x31)
 		{
 			std::cout << "key down: #1" << std::endl;
+#if (CV_VERSION_MAJOR == 4)
+			cv::cvtColor(img, dst, cv::COLOR_BGR2GRAY);
+#else (CV_VERSION_MAJOR == 3)
 			cv::cvtColor(img, dst, CV_BGR2GRAY);
+#endif // CV_VERSION_MAJOR
 		}
 		else if (key == 0x32)
 		{
 			std::cout << "key down: #2" << std::endl;
+#if (CV_VERSION_MAJOR == 4)
+			cv::cvtColor(img, dst, cv::COLOR_BGR2HSV);
+#else (CV_VERSION_MAJOR == 3)
 			cv::cvtColor(img, dst, CV_BGR2HSV);
+#endif // CV_VERSION_MAJOR
 		}
 		else if (key == 0x33)
 		{
@@ -192,10 +207,15 @@ void QuickDemo::InRangeDemo(cv::Mat& img)
 {
 	// 颜色提取
 	cv::Mat hsv;
+#if (CV_VERSION_MAJOR == 4)
+	cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
+#else (CV_VERSION_MAJOR == 3)
 	cv::cvtColor(img, hsv, CV_BGR2HSV);
+#endif // CV_VERSION_MAJOR
+
 	cv::Mat mask;
 	// 相当于二值化, 查询目标图像是否在范围内
-	cv::inRange(hsv, cv::Scalar(35, 43, 46), cv::Scalar(255, 200, 128), mask);
+	cv::inRange(hsv, cv::Scalar(63, 0, 4), cv::Scalar(255, 35, 190), mask);
 	cv::imshow("mask", mask);
 
 	cv::Mat red = cv::Mat::zeros(img.size(), img.type());
@@ -203,4 +223,159 @@ void QuickDemo::InRangeDemo(cv::Mat& img)
 	cv::bitwise_not(mask, mask);
 	img.copyTo(red, mask);
 	cv::imshow("roi", red);
+}
+
+void QuickDemo::PixelStatistic(cv::Mat& img)
+{
+	// 像素统计
+	double minVal, maxVal;
+	cv::Point minCol, maxCol;
+
+	std::vector<cv::Mat> vMat;
+	cv::split(img, vMat);
+	std::unordered_map<int, char> uChannel = { {0, 'b'}, {1, 'g'}, {2, 'r'} };
+	for (int i = 0; i < img.channels(); i++)
+	{
+		cv::minMaxLoc(vMat[i], &minVal, &maxVal, &minCol, &maxCol, cv::Mat());
+		printf("%c-> min value: %.4f, max value: %.4f\n", uChannel[i], minVal, maxVal);
+	}
+
+	cv::Mat mean, stddev;
+	cv::meanStdDev(img, mean, stddev);
+	std::cout << "mean: " << mean << std::endl;
+	std::cout << "stddev: " << stddev << std::endl;
+}
+
+void QuickDemo::DrawingDemo(cv::Mat& img)
+{
+	// 多边形绘制
+#if (CV_VERSION_MAJOR == 4)
+	cv::namedWindow("drawing.png", cv::WINDOW_NORMAL);
+#else (CV_VERSION_MAJOR == 3)
+	cv::namedWindow("drawing.png", CV_WINDOW_NORMAL);
+#endif // CV_VERSION_MAJOR
+
+	cv::Mat bg = cv::Mat::zeros(img.size(), img.type());
+	cv::rectangle(img, cv::Rect(50, 50, 100, 100), cv::Scalar(24, 128, 155), 1, cv::LINE_8);
+	cv::circle(img, cv::Point(100, 100), 50, cv::Scalar(155, 128, 24), -1, cv::LINE_AA);
+	cv::line(img, cv::Point(50, 50), cv::Point(150, 150), cv::Scalar(128, 155, 24), 1, cv::LINE_4);
+
+	cv::Mat dst;
+	cv::ellipse(img, cv::RotatedRect(cv::Point(100, 100), cv::Size2f(100, 50), 0.0), cv::Scalar(128, 128, 0));
+	cv::addWeighted(img, 0.7, bg, 0.3, 0, dst);
+	cv::imshow("drawing.png", dst);
+}
+
+void QuickDemo::RandomDemo()
+{
+	// 随机生成坐标
+	cv::Mat bg = cv::Mat::zeros(cv::Size(256, 256), CV_8UC3);
+	int height = bg.rows;
+	int width = bg.cols;
+	cv::RNG rng(12345);
+	while (true)
+	{
+		int key = cv::waitKey(100);
+		if (key == 0x1B)
+			break;
+		int xPoint1 = rng.uniform(0, width);
+		int yPoint1 = rng.uniform(0, height);
+		int xPoint2 = rng.uniform(0, width);
+		int yPoint2 = rng.uniform(0, height);
+		int b = rng.uniform(0, 255);
+		int g = rng.uniform(0, 255);
+		int r = rng.uniform(0, 255);
+		bg = cv::Scalar(0, 0, 0);
+		cv::line(bg, cv::Point(xPoint1, yPoint1), cv::Point(xPoint2, yPoint2), cv::Scalar(b, g, r), 1, cv::LINE_AA);
+		cv::imshow("random.png", bg);
+	}
+}
+
+void QuickDemo::PolylineDrawing()
+{
+	// 多边形绘制
+	cv::Mat bg = cv::Mat::zeros(cv::Size(256, 256), CV_8UC3);
+	std::vector<cv::Point> vPoint1 = {
+		cv::Point(50, 50),
+		cv::Point(100, 50),
+		cv::Point(150, 150),
+		cv::Point(75, 200),
+		cv::Point(0, 150)
+	};
+	std::vector<cv::Point> vPoint2 = {
+		cv::Point(100, 100),
+		cv::Point(200, 100),
+		cv::Point(150, 150)
+	};
+	cv::RNG rng(12345);
+	cv::Scalar s1 = cv::Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+	cv::Scalar s2 = cv::Scalar(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+	//cv::fillPoly(bg, vPoint1, s1, cv::LINE_AA);
+	//cv::polylines(bg, vPoint1, true, s2, 2, cv::LINE_AA);
+	std::vector<std::vector<cv::Point>> vvPoints = { vPoint1, vPoint2 };
+	cv::drawContours(bg, vvPoints, -1, s1);
+	cv::imshow("polyline.png", bg);
+}
+
+// 定义鼠标事件静态变量
+cv::Mat QuickDemo::temp;
+cv::Point QuickDemo::startPoint(-1, -1);
+cv::Point QuickDemo::stopPoint(-1, -1);
+
+void QuickDemo::OnMouseEvent(int event_, int x, int y, int flag, void* userdata)
+{
+	// 鼠标响应事件回调函数
+	cv::Mat img = *((cv::Mat*)userdata);
+	if (event_ == cv::EVENT_LBUTTONDOWN)
+	{
+		// 开始绘制
+		startPoint.x = x;
+		startPoint.y = y;
+		printf("start point: (%d, %d)\n", x, y);
+	}
+	else if (event_ == cv::EVENT_LBUTTONUP)
+	{
+		// 停止绘制
+		stopPoint.x = x;
+		stopPoint.y = y;
+		int dx = stopPoint.x - startPoint.x;
+		int dy = stopPoint.y - startPoint.y;
+		if (dx >= 0 && dy > 0)
+		{
+			cv::Rect box(startPoint.x, startPoint.y, dx, dy);
+			temp.copyTo(img);
+			cv::imshow("roi.png", img(box));	
+			cv::rectangle(img, box, cv::Scalar(128, 155, 24), 1, cv::LINE_AA);
+			cv::imshow("mouse_event", img);
+			startPoint.x = -1;
+			startPoint.y = -1;
+		}
+	}
+	else if (event_ == cv::EVENT_MOUSEMOVE)
+	{
+		// 绘制中
+		if (startPoint.x > 0 && startPoint.y > 0)
+		{
+			stopPoint.x = x;
+			stopPoint.y = y;
+			int dx = stopPoint.x - startPoint.x;
+			int dy = stopPoint.y - startPoint.y;
+			if (dx >= 0 && dy > 0)
+			{
+				cv::Rect box(startPoint.x, startPoint.y, dx, dy);
+				temp.copyTo(img);
+				cv::rectangle(img, box, cv::Scalar(128, 155, 24), 1, cv::LINE_AA);
+				cv::imshow("mouse_event", img);
+			}
+		}
+	}
+}
+
+void QuickDemo::MouseDrawingDemo(cv::Mat& img)
+{
+	// 鼠标事件
+	cv::namedWindow("mouse_event");
+	cv::setMouseCallback("mouse_event", OnMouseEvent, &img);
+	cv::imshow("mouse_event", img);
+	temp = img.clone();
 }
