@@ -387,10 +387,8 @@ void QuickDemo::NormalizeDemo(cv::Mat& img)
 	img.convertTo(img, CV_32F);
 	printf("convert 32f img channel: %d\n", img.channels());
 	std::cout << "pixel value: " << img.at<cv::Vec3f>(0, 1) << std::endl;
-	printf("pixel value: %f\n", img.at<float>(0, 3));
-	printf("pixel value: %f\n", img.at<float>(0, 4));
-	printf("pixel value: %f\n", img.at<float>(0, 5));
 	cv::normalize(img, dst, 1.0, 0.0, cv::NORM_MINMAX);
+	std::cout << "pixel value: " << dst.at<cv::Vec3f>(0, 1) << std::endl;
 	cv::imshow("normalize", dst);
 }
 
@@ -406,4 +404,68 @@ void QuickDemo::ResizeDemo(cv::Mat& img)
 	cv::resize(img, zoomOut, cv::Size2d(rows * 1.2, cols * 1.2), 0, 0, cv::INTER_LINEAR);
 	cv::imshow("zoom in", zoomIn);
 	cv::imshow("zoom out", zoomOut);
+}
+
+void QuickDemo::FlipDemo(cv::Mat& img)
+{
+	// 图像翻转
+	cv::Mat dst;
+	cv::flip(img, dst, 1);	// 0: x, 1: y, 2: y=x;
+	cv::imshow("flip.png", dst);
+	cv::imshow("normal.png", img);
+}
+
+void QuickDemo::RotateDemo(cv::Mat& img)
+{
+	// 图像旋转
+	cv::Mat M, dst;
+	int width = img.cols;
+	int height = img.rows;
+
+	// 旋转矩阵
+	// [cos	-sin (1 - sin) * tx + ty * sin]
+	// [sin  cos (1 - cos) * ty - tx * sin]
+	// [ 0    0            1              ]
+	M = cv::getRotationMatrix2D(cv::Point(width / 2, height / 2), 45, 1.0);
+	std::cout << M << std::endl;
+
+	// 自适应边框
+	double cos = abs(M.at<double>(0, 0));
+	double sin = abs(M.at<double>(0, 1));
+	int newWidth = (int)(width * cos + height * sin);
+	int newHeight = (int)(width * sin + height * cos);
+		// 平移
+	M.at<double>(0, 2) += (newWidth / 2.0 - width / 2.0);
+	M.at<double>(1, 2) += (newHeight / 2.0 - height / 2.0);
+	cv::warpAffine(img, dst, M, cv::Size(newWidth, newHeight), cv::INTER_LINEAR, 0, cv::Scalar(128, 128, 128));
+	cv::imshow("rotate.png", dst);
+}
+
+void QuickDemo::VideoDemo()
+{
+	// 视频操作
+	cv::VideoCapture capture("./img/test.mp4");
+	cv::Mat frame;
+	int width = (int)capture.get(cv::CAP_PROP_FRAME_WIDTH);
+	int height = (int)capture.get(cv::CAP_PROP_FRAME_HEIGHT);
+	int counts = (int)capture.get(cv::CAP_PROP_FRAME_COUNT);
+	double fps = capture.get(cv::CAP_PROP_FPS);
+	printf("width: %d, height: %d, frame nums: %d, fps: %.4f\n", width, height, counts, fps);
+	cv::VideoWriter writer("./img/test_flip.mp4", (int)capture.get(cv::CAP_PROP_FOURCC), fps, cv::Size(width, height), true);
+	
+	while (true)
+	{
+		capture.read(frame);
+		cv::flip(frame, frame, 2);
+		writer.write(frame);
+		
+		if (frame.empty())
+			break;
+		cv::imshow("frame", frame);
+		int key = cv::waitKey(1000 / 24);
+		if (key == 0x1B)
+			break;
+	}
+	capture.release();
+	writer.release();
 }

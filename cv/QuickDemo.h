@@ -28,6 +28,9 @@ public:
 	void MouseDrawingDemo(cv::Mat& img);
 	void NormalizeDemo(cv::Mat& img);
 	void ResizeDemo(cv::Mat& img);
+	void FlipDemo(cv::Mat& img);
+	void RotateDemo(cv::Mat& img);
+	void VideoDemo();
 private:
 	static cv::Mat temp;
 	static cv::Point startPoint;
