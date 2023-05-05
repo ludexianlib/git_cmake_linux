@@ -469,3 +469,88 @@ void QuickDemo::VideoDemo()
 	capture.release();
 	writer.release();
 }
+
+void QuickDemo::Histogram2D(cv::Mat& img)
+{
+	cv::Mat hsv, hsHist;
+#if (CV_VERSION_MAJOR == 4)
+	 cv::cvtColor(img, hsv, cv::COLOR_BGR2HSV);
+#else (CV_VERSION_MAJOR == 3)
+	cv::cvtColor(img, hsv, CV_BGR2HSV);
+#endif // CV_VERSION_MAJOR
+
+	int hBins = 180, sBins = 256;
+	int histBins[] = { hBins,sBins };
+	float hRange[] = { 0,180 };
+	float sRange[] = { 0,256 };
+	const float* hsRanges[] = { hRange,sRange };
+	int hsChannels[] = { 0,1 };
+
+	// 1.输入图像
+	// 2.输入图像个数
+	// 3.通道数
+	// 4.mask
+	// 5.输出图像
+	// 6.输出图像通道
+	// 7.分成多少个区间
+	// 8.统计像素值范围
+	cv::calcHist(&hsv, 1, hsChannels, cv::Mat(), hsHist, 2, histBins, hsRanges, true, false);
+	
+	// 获取直方图最大值
+	double maxValue = 0.0;
+	cv::minMaxLoc(hsHist, 0, &maxValue, 0, 0);
+	cv::Mat	hist2D = cv::Mat::zeros(cv::Size(hBins, sBins), CV_8UC3);
+	
+	for (int h = 0; h < hBins; h++)
+	{
+		for (int s = 0; s < sBins; s++)
+		{
+			float binValue = hsHist.at<float>(h, s);
+			// 高度
+			int intensity = cvRound((double)binValue * 255 / maxValue);
+			cv::rectangle(hist2D, cv::Point(h, s), cv::Point(h + 1, s + 1), 
+				cv::Scalar::all(intensity));
+		}
+	}
+	cv::applyColorMap(hist2D, hist2D, cv::COLORMAP_JET);
+	cv::imshow("2D gray hist", hist2D);
+	cv::imshow("hist", hsHist);
+}
+
+void QuickDemo::HistogramEq(cv::Mat& img)
+{
+	// 直方图均衡化
+	cv::Mat gray, dst;
+#if (CV_VERSION_MAJOR == 4)
+	cv::cvtColor(img, gray, cv::COLOR_BGR2GRAY);
+#else (CV_VERSION_MAJOR == 3)
+	cv::cvtColor(img, gray, CV_BGR2GRAY);
+#endif // CV_VERSION_MAJOR
+
+	cv::equalizeHist(gray, dst);
+	cv::imshow("equalize hist", dst);
+}
+
+void QuickDemo::BlurDemo(cv::Mat& img)
+{
+	// 均值滤波
+	cv::Mat dst;
+	cv::blur(img, dst, cv::Size(3, 3));
+	cv::imshow("blur.png", dst);
+}
+
+void QuickDemo::GaussianBlurDemo(cv::Mat& img)
+{
+	// 高斯滤波
+	cv::Mat dst;
+	cv::GaussianBlur(img, dst, cv::Size(3, 3), 3);
+	cv::imshow("gaussian blur", dst);
+}
+
+void QuickDemo::BifilterDemo(cv::Mat& img)
+{
+	// 双边线性滤波
+	cv::Mat dst;
+	cv::bilateralFilter(img, dst, 0, 100, 10);
+	cv::imshow("bilateral", dst);
+}

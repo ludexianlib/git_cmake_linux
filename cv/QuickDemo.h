@@ -31,6 +31,11 @@ public:
 	void FlipDemo(cv::Mat& img);
 	void RotateDemo(cv::Mat& img);
 	void VideoDemo();
+	void Histogram2D(cv::Mat& img);
+	void HistogramEq(cv::Mat& img);
+	void BlurDemo(cv::Mat& img);
+	void GaussianBlurDemo(cv::Mat& img);
+	void BifilterDemo(cv::Mat& img);
 private:
 	static cv::Mat temp;
 	static cv::Point startPoint;

@@ -8,7 +8,7 @@ int main()
 		return -1;
 	
 	QuickDemo demo;
-	demo.InRangeDemo(img);
+	demo.BifilterDemo(img);
 
 	cv::waitKey(0);
 
