@@ -1,4 +1,4 @@
-#include "Tutorial.h"
+ï»¿#include "Tutorial.h"
 
 void Tutorial::CommandLine(int argc, char* argv[])
 {
@@ -19,10 +19,10 @@ void Tutorial::CommandLine(int argc, char* argv[])
 
 	double t = (double)cvGetTickCount();
 
-	// ×Ô¶¨Òå¾í»ı²Ù×÷
+	// è‡ªå®šä¹‰å·ç§¯æ“ä½œ
 	Sharpen(src, dst0);
 	t = ((double)cvGetTickCount() - t) / cvGetTickFrequency();
-	std::cout << "´¦ÀíÍ¼Æ¬¾­¹ıÊ±¼ä(s): " << t << std::endl;
+	std::cout << "å¤„ç†å›¾ç‰‡ç»è¿‡æ—¶é—´(s): " << t << std::endl;
 
 	cv::imshow("output", dst0);
 	cv::waitKey(0);
@@ -33,11 +33,11 @@ void Tutorial::CommandLine(int argc, char* argv[])
 
 	t = (double)cvGetTickCount();
 
-	// OpenCV×Ô´ø¾í»ı²Ù×÷
+	// OpenCVè‡ªå¸¦å·ç§¯æ“ä½œ
 	cv::filter2D(src, dst1, src.depth(), kernel);
 
 	t = ((double)cvGetTickCount() - t) / cvGetTickFrequency();
-	std::cout << "´¦ÀíÍ¼Æ¬¾­¹ıÊ±¼ä(s): " << t << std::endl;
+	std::cout << "å¤„ç†å›¾ç‰‡ç»è¿‡æ—¶é—´(s): " << t << std::endl;
 	cv::imshow("output", dst1);
 	cv::waitKey(0);
 }
@@ -53,14 +53,14 @@ void Tutorial::Sharpen(const cv::Mat& src, cv::Mat& dst)
 
 	for (int j = 1; j < src.rows - 1; j++)
 	{
-		// ĞĞÖ¸Õë
+		// è¡ŒæŒ‡é’ˆ
 		const uchar* previous = src.ptr<uchar>(j - 1);
 		const uchar* current = src.ptr<uchar>(j);
 		const uchar* next = src.ptr<uchar>(j + 1);
 
 		uchar* output = dst.ptr<uchar>(j);
 
-		// ¾í»ı¼ÆËã¹ı³Ì
+		// å·ç§¯è®¡ç®—è¿‡ç¨‹
 		for (int i = nChannels; i < nChannels * (src.cols - 1); i++)
 		{
 			output[i] = cv::saturate_cast<uchar>(5 * current[i] -
