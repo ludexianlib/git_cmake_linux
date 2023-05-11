@@ -1,4 +1,5 @@
 ﻿#include "Tutorial.h"
+#include <math.h>
 
 void Tutorial::CommandLine(int argc, char* argv[])
 {
@@ -82,19 +83,41 @@ void Tutorial::PixelOperate(cv::Mat& src)
 		std::cout << "scalar: " << intensity << std::endl;
 		cv::imshow("origin", src);
 		src.at<uchar>(0, 0) = 255;
-		intensity = src.at<uchar>(0, 0);
+		intensity = src.at<uchar>(0, 0); 
 		std::cout << "scalar: " << intensity << std::endl;
 		cv::imshow("changed", src);
 	}
 	else if (src.channels() == 3)
 	{
-		cv::Vec3b vPixel = src.at<cv::Vec3b>(0, 1);
-		std::cout << "vec uchar 3 channels: " << vPixel << std::endl;
-		uchar b = vPixel.val[0];
-		uchar g = vPixel.val[1];
-		uchar r = vPixel.val[2];
-
-
+		// 参考: https://docs.opencv.org/4.3.0/d3/dc1/tutorial_basic_linear_transform.html
+		// 像素操作修改亮度和对比度
+		cv::Mat alphaImg = cv::Mat::zeros(src.size(), CV_32FC3);
+		cv::Mat grammaImg = cv::Mat::zeros(src.size(), CV_32FC3);
+		float alpha = 1.3f;
+		int beta = 40;
+		float gramma = 0.4f;
+		for (int i = 0; i < src.rows; i++)
+		{
+			uchar* srcPtr = src.ptr<uchar>(i);
+			float* alphaPtr = alphaImg.ptr<float>(i);
+			float* gramamPtr = grammaImg.ptr<float>(i);
+			for (int j = 0; j < src.cols; j++)
+			{
+				for (int k = 0; k < src.channels(); k++)
+				{
+					// (alpha * I(i, j) + beta)
+					*alphaPtr++ = alpha * (float)(*srcPtr) + beta; 
+					// (I(i, j) / 255.0) ** gramma * 255.0;
+					*gramamPtr++ = pow((float)(*srcPtr) / 255.0f, gramma) * 255.0f; 
+					*srcPtr++;
+				}
+			}
+		}
+		alphaImg.convertTo(alphaImg, CV_8UC3);
+		grammaImg.convertTo(grammaImg, CV_8UC3);
+		cv::imshow("origin", src);
+		cv::imshow("alphaImg", alphaImg);
+		cv::imshow("grammaImg", grammaImg);
 	}
 
 }
