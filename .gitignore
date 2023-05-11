@@ -5,3 +5,8 @@
 
 # 忽略所有build目录
 build/
+
+# 忽略.gitignore目录下所有 除了!
+# /*
+# !/.git/
+# !/.gitnore
