@@ -1,9 +1,6 @@
 #include "FLog.h"
 #include <time.h>
 
-std::streampos FLog::pos = 0;
-const char* FLog::path = "data.txt";
-
 bool FLog::Write(std::string str)
 {
     std::fstream file;
@@ -49,6 +46,39 @@ bool FLog::ReadLine(std::string& str)
     return true;
 }
 
+bool FLog::InsertData(std::string str, int line)
+{
+    std::fstream file;
+    file.open(path, std::ios::in);
+
+    // 读取所有文本在内存中操作
+    file.seekg(0, file.end);
+    int length = file.tellg();
+    file.seekg(0, file.beg);
+
+    char* buffer = new char[length];
+    memset(buffer, 0, length);
+    file.read(buffer, length);
+
+    std::string text = buffer;
+    delete[] buffer;
+    file.close();
+
+    // 定位到line行
+    size_t index = 0;
+    while (line-- > 1)
+    {
+        index = text.find('\n', index) + 1;
+    }
+    
+    // 插入数据并写回
+    text.insert(index, str);
+    file.open("data.txt", std::ios::out);
+    file << text;
+    file.close();
+    return true;
+}
+
 int main()
 {
     time_t now = time(nullptr);
@@ -61,7 +91,7 @@ int main()
         pnow->tm_hour, 
         pnow->tm_min, 
         pnow->tm_sec);
-    FLog::Write(buf);
+    FLog log("data.txt");
 
     return 0;
 }

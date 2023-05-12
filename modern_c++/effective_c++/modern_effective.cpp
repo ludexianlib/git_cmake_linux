@@ -71,6 +71,12 @@ private:
     VecType values;
 };
 
+// 10.noexcept让函数不抛出异常
+// 11.尽可能使用constexpr
+constexpr int pow(int base, int exp) noexcept {
+    return (exp == 0 ? 1: base * pow(base, exp - 1)); // c++11限制一行
+}
+
 int main()
 {
     // 5.

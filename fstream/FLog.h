@@ -6,12 +6,13 @@
 class FLog
 {
 private:
-    FLog() {}
-    static std::streampos pos;
-    static const char* path;
+    std::streampos pos;
+    const char* path;
 public:
-
-    static bool Write(std::string str);
-    static bool ReadAll(std::string& str);
-    static bool ReadLine(std::string& str);
+    FLog(const char* _path, int _pos = 0) 
+        : path(_path), pos(_pos) {}
+    bool Write(std::string str);
+    bool ReadAll(std::string& str);
+    bool ReadLine(std::string& str);
+    bool InsertData(std::string str, int line);
 };
