@@ -3,13 +3,13 @@ cmake_minimum_required(VERSION 3.20)
 set(PROJECT_NAME main)
 project(${PROJECT_NAME})
 
-set(SRC_LIST main.cpp)
+set(SRC_LIST DLLManager.hpp main.cpp)
 set(CXX_STANDARD_REQUIRED 11)
 
 add_executable(${PROJECT_NAME} ${SRC_LIST})
 
 # 添加预定义
-# add_definitions(-DWIN32 -DUNICODE)
+add_definitions(-DWIN32 -DUNICODE)
 
 # 依赖第三方库的路径
 # link_directories("${CMAKE_CURRENT_SOURCE_DIR}/lib")
