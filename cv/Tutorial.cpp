@@ -142,12 +142,7 @@ void Tutorial::DiscreteFourierTransform(cv::Mat& src)
 	int m = cv::getOptimalDFTSize(src.rows);
 	int n = cv::getOptimalDFTSize(src.cols);
 
-#if (CV_VERSION_MAJOR == 4)
 	cv::cvtColor(src, src, cv::COLOR_BGR2GRAY);
-#else (CV_VERSION_MAJOR == 3)
-	cv::cvtColor(src, src, COLOR_BGR2GRAY);
-#endif // CV_VERSION_MAJOR
-
 	// 多出部分用0填充
 	cv::Mat padded;
 	cv::copyMakeBorder(src, padded, 0, m - src.rows, 0, n - src.cols, cv::BORDER_CONSTANT, cv::Scalar::all(0));
@@ -189,4 +184,93 @@ void Tutorial::DiscreteFourierTransform(cv::Mat& src)
 	// 归一化后方便显示
 	cv::normalize(magSrc, magSrc, 0, 1, cv::NORM_MINMAX);
 	cv::imshow("magnitude", magSrc);
+}
+
+void Tutorial::OperateFile()
+{
+	const char* xmlName = "./img/test.xml";
+	cv::Mat R = cv::Mat_<uchar>::eye(3, 3),
+		T = cv::Mat_<float>::zeros(3, 1);
+	MyData myData(99, "data99");
+
+	{	// write
+		cv::FileStorage fs(xmlName, cv::FileStorage::WRITE);
+		fs << "int" << 100;
+
+		fs << "images" << "[";
+		fs << "test.png" << "../data/boom.jpg";
+		fs << "]";
+
+		fs << "mapping" << "{" << "One" << 1 << "}";
+		fs << "R" << R;
+		fs << "T" << T;
+		fs << "MyData" << myData;
+		fs.release();
+	}
+
+	{	// read
+		cv::FileStorage fs;
+		fs.open(xmlName, cv::FileStorage::READ);
+		int int_ = (int)fs["int"];
+
+		cv::FileNode node = fs["images"];
+		if (node.type() != cv::FileNode::SEQ)
+			exit(-1);
+		cv::FileNodeIterator itBeg = node.begin(), itEnd = node.end();
+		for (; itBeg != itEnd; ++itBeg)
+			std::cout << (std::string)*itBeg << std::endl;
+
+		node = fs["mapping"];
+		std::cout << "One: " << (int)(node["One"]) << std::endl;
+
+		MyData myData;
+		cv::Mat R_, T_;
+		fs["R"] >> R_;
+		fs["T"] >> T_;
+		fs["MyData"] >> myData;
+		std::cout << "R = " << R_ << std::endl;
+		std::cout << "T = " << T_ << std::endl;
+		std::cout << "MyData = " << myData << std::endl;
+		fs.release();
+	}
+}
+
+MyData::MyData()
+	: A(0), id() 
+{ }
+
+MyData::MyData(int a, std::string id)
+	: A(a), id(id) 
+{}
+
+void MyData::write(cv::FileStorage & fs) const
+{
+	// 写入类对象需要实现write
+	fs << "{" << "A" << A << "id" << id << "}";
+}
+
+void MyData::read(const cv::FileNode& node)
+{
+	A = (int)node["A"];
+	id = (std::string)node["id"];
+}
+
+void write(cv::FileStorage& fs, const std::string&, const MyData& x)
+{
+	x.write(fs);
+}
+
+void read(const cv::FileNode& node, MyData& m, const MyData& default_)
+{
+	if (node.empty())
+		m = default_;
+	else
+		m.read(node);
+}
+
+std::ostream& operator<<(std::ostream& out, const MyData& m)
+{
+	out << "{ id = " << m.id << ", ";
+	out << "A = " << m.A << "}";
+	return out;
 }
