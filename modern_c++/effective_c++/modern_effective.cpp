@@ -77,6 +77,36 @@ constexpr int pow(int base, int exp) noexcept {
     return (exp == 0 ? 1: base * pow(base, exp - 1)); // c++11限制一行
 }
 
+// 12.保证const成员函数线程安全
+    // 一个需要同步的成员变量可以使用atomic
+    // 两个及以上的同步成员变量建议使用mutex
+class ThreadSafe
+{
+public:
+    // 1.
+    int times() const {
+        ++count;
+        return count;
+    }
+    // 2.
+    int value() const {
+        std::lock_guard<std::mutex> lock(mtx);
+        if (valid) return val;
+        else {
+            // calculate val
+            valid = true;
+            return val;
+        }
+    }
+private:
+    // 1.
+    mutable std::atomic<int> count;
+    // 2.
+    mutable std::mutex mtx;
+    mutable int val;
+    mutable bool valid = false;
+};
+
 int main()
 {
     // 5.

@@ -7,6 +7,8 @@
 
 // 封装dll
 
+typedef bool (*NoneParamPtr)();
+
 class DLLManager
 {
 public:
@@ -25,8 +27,9 @@ public:
         return true;
     }
 
+    // 根据函数名获取dll函数指针
     template<class T>
-    inline std::function<T> GetFunction(const std::string& name)
+    inline T GetFunction(const std::string& name)
     {
         auto it = mMap.find(name);
         if (it == mMap.end())
@@ -35,10 +38,10 @@ public:
             if (ptr == nullptr)
                 return nullptr;
             mMap.insert(make_pair(name, ptr));
-            return std::function<T>((T*)ptr);
+            return (T)ptr;
         }
         else
-            return std::function<T>((T*)(it->second));
+            return (T)(it->second);
     }
 
     template <class T, class... Args>

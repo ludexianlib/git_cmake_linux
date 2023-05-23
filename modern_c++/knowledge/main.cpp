@@ -25,10 +25,34 @@ void SetRGB(uchar r, uchar g, uchar b)
     printf("rgb: 0x%x\n", rgb);
 }
 
+// 回调函数
+static bool Callback(int argc, char** argv)
+{
+    for (int i = 0; i < argc; i++)
+		printf("%d: %s\n", i + 1, argv[i]);
+	return true;
+}
+
+// 执行回调函数
+bool ExecuteCallback(bool (*callback)(int, char**), int num)
+{
+    if (num == 0)
+        return callback(num, nullptr);
+    else if (num == 1) {
+        const char* str[1] = { "111" };
+        return callback(num, const_cast<char**>(str));
+    }
+    else if (num == 2) {
+        const char* str[2] = { "111", "222" };
+        return callback(num, const_cast<char**>(str));
+    }
+}
+
 int main()
 {
     AddressOffset();
     SetRGB(0, 128, 255);
+    ExecuteCallback(Callback, 2);
 
     return 0;
 }
