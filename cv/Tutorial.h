@@ -2,6 +2,7 @@
 #include <iostream>
 #include "opencv2/opencv.hpp"
 #include "opencv2/core.hpp"
+#include "opencv2/imgcodecs.hpp"
 
 class Tutorial
 {
@@ -11,6 +12,12 @@ public:
 	void PixelOperate(cv::Mat& src);
 	void DiscreteFourierTransform(cv::Mat& src);
 	void OperateFile();
+
+	void ParallelizeComputing();
+	int Mandelbrot(std::complex<float>& z0, const int max);
+	int MandelbrotFormula(std::complex<float>& z0, const int max = 500);
+
+	void ErosionDilation(cv::Mat& src);
 };
 
 class MyData
