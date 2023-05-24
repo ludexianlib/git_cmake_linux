@@ -235,6 +235,79 @@ void Tutorial::OperateFile()
 	}
 }
 
+void Tutorial::ParallelizeComputing()
+{
+	// 并行计算
+	cv::Mat mandelbroImg(720, 1080, CV_8U);
+	float x1 = -2.1f, x2 = 0.6f;
+	float y1 = -1.2f, y2 = 1.2f;
+	float scaleX = mandelbroImg.cols / (x2 - x1);
+	float scaleY = mandelbroImg.rows / (y2 - y1);
+	
+#ifdef CV_CXX11
+	cv::parallel_for_(cv::Range(0, mandelbroImg.rows * mandelbroImg.cols), [&](const cv::Range& range) {
+		for (int r = range.start; r < range.end; r++)
+		{
+			int i = r / mandelbroImg.cols; // 第i行
+			int j = r % mandelbroImg.cols; // 第j列
+
+			float x0 = j / scaleX + x1;
+			float y0 = i / scaleY + y1;
+			
+			std::complex<float> z0(x0, y0);
+			uchar value = (uchar)MandelbrotFormula(z0);
+			mandelbroImg.ptr<uchar>(i)[j] = value;
+		}
+	});
+#else
+
+#endif
+
+	imshow("parallel.png", mandelbroImg);
+}
+
+int Tutorial::Mandelbrot(std::complex<float>& z0, const int max)
+{
+	std::complex<float> z = z0;
+	for (int t = 0; t < max; t++)
+	{
+		if (z.real() * z.real() + z.imag() * z.imag() > 4.0f) return t;
+		z = z * z + z0;
+	}
+	return max;
+}
+
+int Tutorial::MandelbrotFormula(std::complex<float>& z0, const int max)
+{
+	int value = Mandelbrot(z0, max);
+	if (max - value == 0)
+		return 0;
+	return cvRound(sqrt(value / (float)max) * 255);
+}
+
+void Tutorial::ErosionDilation(cv::Mat & src)
+{
+	cv::Mat erodeDst, dilationDst;
+	cv::Mat kernel = cv::Mat::ones(3, 3, CV_8U);
+	
+	// 像素取kernel计算结果最小值
+	cv::erode(src, erodeDst, kernel);
+	// 像素取kernel计算结果最大值
+	cv::dilate(src, dilationDst, kernel);
+	cv::imshow("src", src);
+	cv::imshow("erodeDst", erodeDst);
+	cv::imshow("dilationDst", dilationDst);
+
+	// 降噪
+	// Opening: 开操作-> dilate(erode(src))			morphologyEx(src, dst, 2, kernel)
+	// Closing: 闭操作-> erode(dilate(src))			morphologyEx(src, dst, 3, kernel)
+	
+	// Gradient: 形态学梯度操作 dilate - erode		morphologyEx(src, dst, 4, kernel)
+
+	// Top Hat: 礼帽: src - Opening					morphologyEx(src, dst, 5, kernel)
+	// Black Hat: 黑帽: src - Closing				morphologyEx(src, dst, 6, kernel)
+}
+
 MyData::MyData()
 	: A(0), id() 
 { }
