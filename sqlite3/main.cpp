@@ -13,6 +13,19 @@ static int Callback(void* data, int argc, char** argv, char** columnName)
 
 int main()
 {
+    // sql语句
+    // SELECT * FROM COMPANY WHERE ID = 2 AND NAME = 'Allen';
+    // SELECT * FROM COMPANY WHERE ID > 2;
+    // SELECT ID, ADDRESS FROM COMPANY WHERE NAME LIKE 'Lu%';   // %(任意字符任意个) _（单个字符）
+    // SELECT * FROM COMPANY WHERE AGE NOT IN (25, 30);
+    // SELECT * FROM COMPANY WHERE SALARY GLOB '2???3';         // 查找长度为 5 位数，且以 2 开头以 3 结尾的任意值
+    // SELECT * FROM COMPANY LIMIT 3 OFFSET 2;                  // 获取第 2 个记录后的 3 行
+    // SELECT * FROM COMPANY ORDER BY SALARY ASC;               // 将结果按SALARY升序   DESC:降序
+
+    // UPDATE COMPANY SET ADDRESS = 'Houston' WHERE NAME = 'Allen';
+
+    // DELETE FROM COMPANY WHERE NAME = 'Allen';
+
     const char* createTable;
 	createTable = "CREATE TABLE COMPANY("
 				  "ID       INT         PRIMARY    KEY   NOT NULL,"
