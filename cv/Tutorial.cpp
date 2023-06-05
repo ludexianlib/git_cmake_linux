@@ -123,7 +123,7 @@ void Tutorial::PixelOperate(cv::Mat& src)
 					*alphaPtr++ = alpha * (float)(*srcPtr) + beta; 
 					// (I(i, j) / 255.0) ** gramma * 255.0;
 					*gramamPtr++ = pow((float)(*srcPtr) / 255.0f, gramma) * 255.0f; 
-					*srcPtr++;
+					srcPtr++;
 				}
 			}
 		}
@@ -306,6 +306,72 @@ void Tutorial::ErosionDilation(cv::Mat & src)
 
 	// Top Hat: 礼帽: src - Opening					morphologyEx(src, dst, 5, kernel)
 	// Black Hat: 黑帽: src - Closing				morphologyEx(src, dst, 6, kernel)
+}
+
+void Tutorial::HitAndMiss()
+{
+	// Hit 突出中心前景
+	cv::Mat kernel = (cv::Mat_<uchar>(3, 3) << 0, 1, 0, 1, -1, 1, 0, 1, 0);
+	cv::Mat dst = (cv::Mat_<uchar>(4, 5) << 
+		0, 0, 255, 0, 0,
+		0, 0, 255, 0, 0,
+		0, 255, 0, 255, 0,
+		0, 255, 255, 0, 0);
+	cv::morphologyEx(dst, dst, cv::MORPH_HITMISS, kernel);
+	std::cout << dst << std::endl;
+}
+
+void Tutorial::ExtraLine(cv::Mat& src)
+{
+	cv::Mat gray;
+#if (CV_VERSION_MAJOR == 4)
+	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+#else (CV_VERSION_MAJOR == 3)
+	cv::cvtColor(src, gray, CV_BGR2GRAY);
+#endif // CV_VERSION_MAJOR
+
+	cv::Mat bw;
+	// 自适应，根据邻近区域
+	cv::adaptiveThreshold(~gray, bw, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 9, -2);
+	cv::imshow("bw", bw);
+	
+	cv::Mat horizontal = bw.clone();
+	cv::Mat vertical = bw.clone();
+
+	// 获取水平方向卷积核大小 [1, 1, ... 1, ... 1, 1]
+	int horizontalSize = horizontal.cols / 40;
+	cv::Mat horizontalStruct = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(horizontalSize, 1));
+	cv::erode(horizontal, horizontal, horizontalStruct);
+	cv::dilate(horizontal, horizontal, horizontalStruct);
+	cv::imshow("horizontal", horizontal);
+}
+
+void Tutorial::Pyramid(cv::Mat& src)
+{
+	while (true)
+	{
+		cv::imshow("pyramid", src);
+		char c = (char)cv::waitKey(0);
+		if (c == 27)
+			break;
+		else if (c == 'i')
+			cv::pyrUp(src, src, cv::Size(src.cols * 2, src.rows * 2));
+		else if (c == 'o')
+			cv::pyrDown(src, src, cv::Size(src.cols / 2, src.rows / 2));
+	}
+}
+
+void Tutorial::Thresholding(cv::Mat& src)
+{
+	// 0: binary
+	// 1: binary inverted
+	// 2: threshold truncated
+	// 3: threshold to zero
+	// 4: threshold to zero inverted
+
+	cv::Mat gray;
+	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+	cv::threshold(gray, gray, 128, 255, 0);
 }
 
 MyData::MyData()

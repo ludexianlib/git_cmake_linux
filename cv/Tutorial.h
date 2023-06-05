@@ -18,6 +18,10 @@ public:
 	int MandelbrotFormula(std::complex<float>& z0, const int max = 500);
 
 	void ErosionDilation(cv::Mat& src);
+	void HitAndMiss();
+	void ExtraLine(cv::Mat& src);
+	void Pyramid(cv::Mat& src);
+	void Thresholding(cv::Mat& src);
 };
 
 class MyData
