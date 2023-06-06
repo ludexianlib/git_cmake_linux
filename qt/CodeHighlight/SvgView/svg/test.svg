@@ -1,0 +1,16 @@
+<svg version="1.1"
+     baseProfile="full"
+     width="300" height="200"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <circle cx="150" cy="100" r="80" stroke="red" fill="transparent" stroke-width="3" />
+
+  <text x="150" y="110" font-size="40" text-anchor="middle" fill="blue">SVG</text>
+
+  <!-- 二次贝塞尔曲线：控制点（对称），终点 -->
+  <path d="M70,100 Q150, 50 230, 100" fill="none" stroke="green" stroke-width="3"/>
+
+  <!-- 三次贝塞尔曲线：起点控制点，终点控制点，终点 -->
+  <path d="M70,100 C 100,150 200,150 230,100" fill="none" stroke="green" stroke-width="3"/>
+
+</svg>
