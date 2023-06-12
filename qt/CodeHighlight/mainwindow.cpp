@@ -1,12 +1,20 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFile>
+#include <QDebug>
+#include <QTextCodec>
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+//    setWindowOpacity(0.5); // 窗口透明度
+//    setWindowFlags(Qt::WindowStaysOnTopHint); // 顶层窗口
+
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("utf-8"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 
     // 创建高亮对象
     syntaxHighlight = new SyntaxHighlight(ui->plainTextEdit->document());
@@ -17,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
     // svg view
     svgView = new SvgView(this);
     ui->horizontalLayout_2->addWidget(svgView);
+
+    // clock
+    clock = new Clock(this);
+    ui->horizontalLayout->addWidget(clock, 1);
 }
 
 MainWindow::~MainWindow()

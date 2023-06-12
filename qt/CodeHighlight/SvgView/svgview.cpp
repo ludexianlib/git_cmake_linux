@@ -1,5 +1,6 @@
 #include "svgview.h"
 #include <QFile>
+#include <QDebug>
 #include <qmath.h>
 #include <QGraphicsView>
 #include <QGraphicsRectItem>

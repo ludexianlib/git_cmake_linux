@@ -22,6 +22,10 @@ public:
 	void ExtraLine(cv::Mat& src);
 	void Pyramid(cv::Mat& src);
 	void Thresholding(cv::Mat& src);
+	void HSVThreshold(cv::Mat& src);
+	void MakeBorder(cv::Mat& src);
+	void Soble(cv::Mat& src);
+	void LaplacianOperator(cv::Mat& src);
 };
 
 class MyData

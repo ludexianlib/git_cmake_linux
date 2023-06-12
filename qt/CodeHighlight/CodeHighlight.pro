@@ -22,3 +22,4 @@ FORMS    += mainwindow.ui
 include($$PWD/Syntax/Syntax.pri)
 include($$PWD/Editor/Editor.pri)
 include($$PWD/SvgView/SvgView.pri)
+include($$PWD/Clock/Clock.pri)

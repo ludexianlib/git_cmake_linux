@@ -372,6 +372,58 @@ void Tutorial::Thresholding(cv::Mat& src)
 	cv::Mat gray;
 	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
 	cv::threshold(gray, gray, 128, 255, 0);
+	cv::imshow("threshold", gray);
+}
+
+void Tutorial::HSVThreshold(cv::Mat& src)
+{
+	cv::cvtColor(src, src, cv::COLOR_BGR2HSV);
+	cv::inRange(src, cv::Scalar(10, 20, 50), cv::Scalar(255, 255, 255), src);
+	cv::imshow("hsv threshold", src);
+}
+
+void Tutorial::MakeBorder(cv::Mat& src)
+{
+	using namespace cv;
+	int borderType = BORDER_CONSTANT;
+	RNG rng(12345);
+
+	int top = (int)(0.05 * src.rows); int bottom = top;
+	int left = (int)(0.05 * src.cols); int right = left;
+	Scalar value(rng.uniform(0, 255), rng.uniform(0, 255), rng.uniform(0, 255));
+	copyMakeBorder(src, src, top, bottom, left, right, borderType, value);
+	imshow("make border", src);
+}
+
+void Tutorial::Soble(cv::Mat& src)
+{
+	using namespace cv;
+	GaussianBlur(src, src, Size(3, 3), 0, 0, BORDER_DEFAULT);
+	cvtColor(src, src, COLOR_BGR2GRAY);
+	Mat grad_x, grad_y;
+	Mat abs_grad_x, abs_grad_y;
+	Sobel(src, grad_x, CV_16S, 1, 0, 3);	// 1 0 表示x方向导数
+	Sobel(src, grad_y, CV_16S, 0, 1, 3);
+
+	// converting back to CV_8U
+	convertScaleAbs(grad_x, abs_grad_x);
+	convertScaleAbs(grad_y, abs_grad_y);
+	Mat grad;
+	addWeighted(abs_grad_x, 0.5, abs_grad_y, 0.5, 0, grad);
+	imshow("soble", grad);
+}
+
+void Tutorial::LaplacianOperator(cv::Mat& src)
+{
+	using namespace cv;
+	cv::Mat gray;
+	GaussianBlur(src, src, Size(3, 3), 0, 0, BORDER_DEFAULT);
+	cvtColor(src, gray, COLOR_BGR2GRAY);
+	Mat dst, abs_dst;
+	Laplacian(gray, dst, CV_16S, 3);
+	// converting back to CV_8U
+	convertScaleAbs(dst, abs_dst);
+	imshow("LaplacianOperator", abs_dst);
 }
 
 MyData::MyData()
