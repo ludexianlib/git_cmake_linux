@@ -4,6 +4,8 @@
 #include <QDebug>
 #include <QTextCodec>
 #include <iostream>
+#include "SvgView/svgview.h"
+#include "Clock/clock.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -23,11 +25,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(OpenFile()));
 
     // svg view
-    svgView = new SvgView(this);
+    SvgView* svgView = new SvgView(this);
     ui->horizontalLayout_2->addWidget(svgView);
 
     // clock
-    clock = new Clock(this);
+    Clock* clock = new Clock(this);
     ui->horizontalLayout->addWidget(clock, 1);
 }
 

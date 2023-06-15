@@ -1,41 +1,38 @@
 #include "syntaxhighlight.h"
+#include <QFile>
+#include <QDebug>
 
 SyntaxHighlight::SyntaxHighlight(QTextDocument *parent) :
     QSyntaxHighlighter(parent)
 {
+    SetHigilighStyle("./ccppStyle.txt");
+}
+
+void SyntaxHighlight::SetHigilighStyle(const char *path)
+{
+    char buf[256];
     HighlightRule rule;
 
-    // 关键字高亮规则
-    QStringList keywords;
-    keywords << "\\bFMAX\\b" << "\\bF\\d+\\b";
-    foreach(const QString& pattern, keywords) {
-        // 高亮表达式
-        rule.pattern = QRegExp(pattern);
+    // 读取文件中每一行，按@分割
+    // 设置高亮文本规则和高亮颜色
+    QFile file(path);
+    file.open(QFile::ReadOnly);
+    while (!file.atEnd()) {
+        memset(buf, 0, 256);
+        file.readLine(buf, 255);
 
-        // 高亮颜色
-        rule.format.setForeground(QBrush(QColor(220, 150, 15)));
+        QString str(buf);
+        QStringList list = str.split('@');
+
+        // 将16进制字符串转为int型
+        std::string cRGB;
+        cRGB = list[1].trimmed().toStdString();
+        int rgb = strtol(cRGB.c_str(), 0, 16);
+
+        rule.pattern = QRegExp(list[0]);
+        rule.format.setForeground(QBrush(QColor(rgb)));
         highlightRules.append(rule);
     }
-
-    // 行号高亮规则
-    rule.pattern = QRegExp("^\\d+\\b");
-    rule.format.setForeground(QBrush(QColor(10, 138, 158)));
-    highlightRules.append(rule);
-
-    // ; 注释高亮规则
-    rule.pattern = QRegExp(";.*");
-    rule.format.setForeground(QBrush(QColor(10, 159, 10)));
-    highlightRules.append(rule);
-
-    // 数字坐标规则
-    rule.pattern = QRegExp("[+-]*\\d+\\.\\d{0,}|[+-]\\d+");
-    rule.format.setForeground(QBrush(QColor(20, 60, 210)));
-    highlightRules.append(rule);
-
-    // ""高亮规则
-    rule.pattern = QRegExp("\".*\"");
-    rule.format.setForeground(QBrush(QColor(198, 98, 23)));
-    highlightRules.append(rule);
 }
 
 void SyntaxHighlight::highlightBlock(const QString &text)

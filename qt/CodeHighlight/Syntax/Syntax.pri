@@ -3,3 +3,5 @@ HEADERS += \
 
 SOURCES += \
     Syntax/syntaxhighlight.cpp
+
+RESOURCES +=

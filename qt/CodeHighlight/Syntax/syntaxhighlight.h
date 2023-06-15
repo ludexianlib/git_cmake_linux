@@ -12,6 +12,9 @@ class SyntaxHighlight : public QSyntaxHighlighter
 public:
     explicit SyntaxHighlight(QTextDocument *parent = 0);
 
+public slots:
+    void SetHigilighStyle(const char* path);
+
 protected:
     void highlightBlock(const QString &text);
 
