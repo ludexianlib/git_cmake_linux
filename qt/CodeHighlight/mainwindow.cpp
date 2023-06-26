@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QTextCodec>
-#include <iostream>
+#include <QTextStream>
 #include "SvgView/svgview.h"
 #include "Clock/clock.h"
 
@@ -42,14 +42,9 @@ MainWindow::~MainWindow()
 void MainWindow::OpenFile()
 {
     QFile file("nc.txt");
-    file.open(QFile::ReadOnly);
-    char buf[128];
-    QString str;
-    while (!file.atEnd()) {
-        memset(buf, 0, 128);
-        file.read(buf, 127);
-        str.append(buf);
-    }
+    file.open(QFile::ReadOnly | QFile::Text);
+    QTextStream in(&file);
+    QString str = in.readAll();
     ui->plainTextEdit->setPlainText(str);
     file.close();
 }

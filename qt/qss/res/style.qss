@@ -1,0 +1,66 @@
+.Widget {
+    background-color: rgb(48, 48, 48);
+}
+#mainWidget {
+    background-color: rgb(78, 78, 78);
+}
+#vipBtn {
+    /* 渐变起点和终点，以左上角为原点 */
+    background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5, stop: 0 rgb(128, 128, 128),
+        stop: 0.5 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
+
+    border-radius: 20px;
+    color: rgb(178, 178, 178);
+}
+
+#routeLabel {
+    color: rgb(178, 178, 178);
+}
+
+/* 一键连接按钮 */
+#connectBtn {
+    /* 渐变圆心在矩形中心 */
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1, fx: 0.5, fy: 0.5,
+        stop: 0.3 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
+
+    border-radius: 80px;
+    color: rgb(178, 178, 178);
+}
+#connectBtn:hover {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1, fx: 0.5, fy: 0.5,
+        stop: 0 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
+}
+#connectBtn:pressed {
+    background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1, fx: 0.5, fy: 0.5,
+        stop: 0.3 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
+}
+
+/* 连接线路按钮 */
+#routeBtn {
+    background-color: rgb(78, 78, 78);
+    border-radius: 10px;
+    border: 1px solid rgb(178, 178, 178);
+    color: rgb(178, 178, 178);
+}
+#routeBtn:hover {
+    background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5, stop: 0 rgba(78, 78, 78, 128),
+        stop: 0.5 rgba(128, 128, 128, 178), stop: 1 rgba(78, 78, 78, 128));
+}
+#routeBtn:pressed {
+    background-color: rgb(78, 78, 78);
+}
+
+/* 左边菜单按钮 */
+QRadioButton {
+    color: rgb(178, 178, 178);
+    background-color: rgb(48, 48, 48);
+    border-radius: 8px;
+}
+QRadioButton:hover {
+    background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5,
+        stop: 0 rgb(58, 58, 58), stop: 1 rgb(48, 48, 48));
+}
+QRadioButton:checked {
+    background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5,
+        stop: 0 rgb(78, 78, 78), stop: 1 rgb(48, 48, 48));
+}
