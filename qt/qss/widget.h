@@ -2,6 +2,8 @@
 #define WIDGET_H
 
 #include <QWidget>
+#include <QResizeEvent>
+#include "./route/route.h"
 
 namespace Ui {
 class Widget;
@@ -15,9 +17,15 @@ public:
     explicit Widget(QWidget *parent = 0);
     ~Widget();
 
+protected:
+    void resizeEvent(QResizeEvent* event);
+
+private slots:
+    void on_routeBtn_clicked();
+
 private:
     Ui::Widget *ui;
-    QPoint lastPos;
+    Route* routeWidget;
 };
 
 #endif // WIDGET_H

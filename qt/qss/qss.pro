@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,3 +21,5 @@ FORMS    += widget.ui
 
 RESOURCES += \
     res.qrc
+
+include($$PWD/route/route.pri)

@@ -1,10 +1,10 @@
-.Widget {
+QWidget#Widget {
     background-color: rgb(48, 48, 48);
 }
-#mainWidget {
+QWidget#mainWidget {
     background-color: rgb(78, 78, 78);
 }
-#vipBtn {
+QPushButton#vipBtn {
     /* 渐变起点和终点，以左上角为原点 */
     background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5, stop: 0 rgb(128, 128, 128),
         stop: 0.5 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
@@ -13,12 +13,12 @@
     color: rgb(178, 178, 178);
 }
 
-#routeLabel {
+QLabel#routeLabel {
     color: rgb(178, 178, 178);
 }
 
 /* 一键连接按钮 */
-#connectBtn {
+QPushButton#connectBtn {
     /* 渐变圆心在矩形中心 */
     background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1, fx: 0.5, fy: 0.5,
         stop: 0.3 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
@@ -26,27 +26,27 @@
     border-radius: 80px;
     color: rgb(178, 178, 178);
 }
-#connectBtn:hover {
+QPushButton#connectBtn:hover {
     background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1, fx: 0.5, fy: 0.5,
         stop: 0 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
 }
-#connectBtn:pressed {
+QPushButton#connectBtn:pressed {
     background: qradialgradient(cx: 0.5, cy: 0.5, radius: 1, fx: 0.5, fy: 0.5,
         stop: 0.3 rgb(78, 78, 78), stop: 1 rgb(128, 128, 128));
 }
 
 /* 连接线路按钮 */
-#routeBtn {
+QPushButton#routeBtn {
     background-color: rgb(78, 78, 78);
     border-radius: 10px;
     border: 1px solid rgb(178, 178, 178);
     color: rgb(178, 178, 178);
 }
-#routeBtn:hover {
+QPushButton#routeBtn:hover {
     background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5, stop: 0 rgba(78, 78, 78, 128),
         stop: 0.5 rgba(128, 128, 128, 178), stop: 1 rgba(78, 78, 78, 128));
 }
-#routeBtn:pressed {
+QPushButton#routeBtn:pressed {
     background-color: rgb(78, 78, 78);
 }
 
@@ -63,4 +63,45 @@ QRadioButton:hover {
 QRadioButton:checked {
     background: qlineargradient(x1: 0, y1: 0.5, x2: 1, y2: 0.5,
         stop: 0 rgb(78, 78, 78), stop: 1 rgb(48, 48, 48));
+}
+/* QRadioButton的子控件 */
+QRadioButton::indicator:unchecked {
+    background: none;
+}
+
+/*********** 弹出Route Widget **********/
+QFrame#mainFrame {
+    background-color: rgb(48, 48, 48);
+}
+QLabel#routeList {
+    color: rgb(178, 178, 178);
+}
+
+/* 弹出Route Widget的返回按钮 */
+QPushButton#backBtn, QPushButton#refreshBtn {
+    color: rgb(178, 178, 178);
+    background-color: rgb(48, 48, 48);
+    border-radius: 5px;
+}
+QPushButton#backBtn:hover, QPushButton#refreshBtn:hover {
+    background-color: rgb(78, 78, 78);
+}
+QPushButton#backBtn:pressed, QPushButton#refreshBtn:pressed {
+    background-color: rgb(48, 48, 48);
+}
+
+/* vip 和 免费 QPushButton */
+QPushButton#vipRouteBtn, QPushButton#freeRouteBtn {
+    background-color: rgb(48, 48, 48);
+    color: rgb(178, 178, 178);
+    border-radius: 5px;
+}
+QPushButton#vipRouteBtn:hover, QPushButton#freeRouteBtn:hover {
+    background-color: rgb(78, 78, 78);
+}
+QPushButton#vipRouteBtn:pressed, QPushButton#freeRouteBtn:pressed {
+    background-color: rgb(58, 58, 58);
+}
+QPushButton#vipRouteBtn:checked, QPushButton#freeRouteBtn:checked {
+    background-color: rgb(78, 78, 78);
 }
