@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/shader.fs</file>
+        <file>res/shader.vs</file>
+        <file>res/awesomeface.png</file>
+        <file>res/lightshader.fs</file>
+        <file>res/lightshader.vs</file>
+        <file>res/container2.png</file>
+        <file>res/container2_specular.png</file>
+    </qresource>
+</RCC>
