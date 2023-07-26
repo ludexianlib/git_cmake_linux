@@ -422,7 +422,7 @@ void QuickDemo::RotateDemo(cv::Mat& img)
 	int width = img.cols;
 	int height = img.rows;
 
-	// 旋转矩阵
+	// 旋转平移矩阵
 	// [cos	-sin (1 - sin) * tx + ty * sin]
 	// [sin  cos (1 - cos) * ty - tx * sin]
 	// [ 0    0            1              ]
