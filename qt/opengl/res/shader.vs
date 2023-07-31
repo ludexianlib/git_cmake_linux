@@ -18,6 +18,6 @@ void main() {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 //    TexCoord = aTexCoord;
     Normal = mat3(transpose(inverse(model))) * aNormal; // 法线矩阵，避免不等比例缩放法线方向改变
-    FragPos = vec3(model * vec4(aPos, 1.0));
+    FragPos = vec3(model * vec4(aPos, 1.0));    // 片段的位置变换到世界空间坐标
     TexCoords = aTexCoords;
 }

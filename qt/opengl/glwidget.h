@@ -43,6 +43,8 @@ private:
     ShaderProgram *lightShaderProgram;
 
     float zoom = 45.0f;
+    float yaw = -90.0f;
+    float pitch = 0.0f;
 
     QQuaternion mRotation;
     QPointF lastPressedPos;

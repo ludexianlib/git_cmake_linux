@@ -19,6 +19,8 @@ SOURCES += \
     camera.cpp \
     glwidget.cpp \
     main.cpp \
+    mesh.cpp \
+    model.cpp \
     object.cpp \
     shaderprogram.cpp \
     widget.cpp
@@ -26,6 +28,8 @@ SOURCES += \
 HEADERS += \
     camera.h \
     glwidget.h \
+    mesh.h \
+    model.h \
     object.h \
     shaderprogram.h \
     widget.h

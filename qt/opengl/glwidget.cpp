@@ -46,6 +46,8 @@ void GLWidget::initializeGL()
     lightShaderProgram->createShaderProgram(QStringList() << ":/res/lightshader.vs" << ":/res/lightshader.fs");
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE); // 面剔除
+    glCullFace(GL_BACK);
 
     loadTexture(":/res/container2.png", &texture[0], 0);
     loadTexture(":/res/container2_specular.png", &texture[1], 1);
@@ -68,7 +70,7 @@ void GLWidget::resizeGL(int /*w*/, int /*h*/)
 void GLWidget::paintGL()
 {
     // 设置窗口颜色
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClearColor(0.5f, 0.3f, 0.4f, 0.5f);
     glClear(GL_COLOR_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -76,10 +78,6 @@ void GLWidget::paintGL()
 //    mObj->bindObjectBuffer();
 
     mShaderProgram->enableShader();
-    mShaderProgram->setGLSLUniform1i("material.diffuse", 0);
-    mShaderProgram->setGLSLUniform3f("objectColor", 1.0, 0.5, 0.31);
-    mShaderProgram->setGLSLUniform3f("lightColor",  1.0f, 1.0f, 1.0f);
-    mShaderProgram->setGLSLUniform3f("lightPos",  -0.5, -0.5, -1);
     QVector3D cameraPos;
     camera->getCameraParam(&cameraPos, Camera::POSITION);
     mShaderProgram->setGLSLUniform3f("viewPos",  cameraPos.x(),  cameraPos.y(),  cameraPos.z());
@@ -89,15 +87,18 @@ void GLWidget::paintGL()
     mShaderProgram->setGLSLUniform1i("material.specular", 1);
     mShaderProgram->setGLSLUniform1f("material.shininess", 32.0f);
 
-    mShaderProgram->setGLSLUniform3f("light.ambient",  0.2f, 0.2f, 0.2f);
-    mShaderProgram->setGLSLUniform3f("light.diffuse",  0.5f, 0.5f, 0.5f);
-    mShaderProgram->setGLSLUniform3f("light.specular", 1.0f, 1.0f, 1.0f);
+    mShaderProgram->setGLSLUniform3f("dirLight.direction", -0.2f, -1.0f, -0.3f);
+    mShaderProgram->setGLSLUniform3f("dirLight.ambient", 0.05f, 0.05f, 0.05f);
+    mShaderProgram->setGLSLUniform3f("dirLight.diffuse", 0.4f, 0.4f, 0.4f);
+    mShaderProgram->setGLSLUniform3f("dirLight.specular", 0.5f, 0.5f, 0.5f);
 
-    mShaderProgram->setGLSLUniform3f("light.direction", -0.2f, -1.0f, -0.3f);
-
-    mShaderProgram->setGLSLUniform1f("light.constant",  1.0f);
-    mShaderProgram->setGLSLUniform1f("light.linear",    0.09f);
-    mShaderProgram->setGLSLUniform1f("light.quadratic", 0.032f);
+    mShaderProgram->setGLSLUniform3f("pointLights[0].position", -0.7, -0.7, 1);
+    mShaderProgram->setGLSLUniform3f("pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
+    mShaderProgram->setGLSLUniform3f("pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
+    mShaderProgram->setGLSLUniform3f("pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+    mShaderProgram->setGLSLUniform1f("pointLights[0].constant", 1.0f);
+    mShaderProgram->setGLSLUniform1f("pointLights[0].linear", 0.09f);
+    mShaderProgram->setGLSLUniform1f("pointLights[0].quadratic", 0.032f);
 
 
     // 使用第0个纹理
@@ -133,7 +134,7 @@ void GLWidget::paintGL()
     lightShaderProgram->setGLSLUniformMatrix4fv("projection", projection.data());
     lightShaderProgram->setGLSLUniformMatrix4fv("view", view.data());
     QMatrix4x4 model2;
-    model2.translate(QVector3D(-0.7, -0.7, -1));
+    model2.translate(QVector3D(-0.7, -0.7, 1));
     model2.rotate(35, QVector3D(1, 1, 0));
     lightShaderProgram->setGLSLUniformMatrix4fv("model", model2.data());
     lightObj->drawObject();
@@ -209,7 +210,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     float z = sin(yaw * (PI / 180.0f)) * cos(pitch * (PI / 180.0f));
     QVector3D temp(x, y, z);
     temp.normalize();
-    front = temp;*/
+    camera->setCameraParam(temp, Camera::FRONT);*/
 
     lastPressedPos = event->pos();
 }
