@@ -32,15 +32,18 @@ protected:
 
 private:
     void loadTexture(QString imgPath, unsigned int *textureID, int textureUnit);
+    void loadTexture3D(unsigned int *textureID);
 
     QPointF pixelPosToViewPos(const QPointF& p);
 
 private:
     Object *mObj;
     Object *lightObj;
+    Object *skyObj;
     Camera *camera;
     ShaderProgram *mShaderProgram;
     ShaderProgram *lightShaderProgram;
+    ShaderProgram *skyShaderProgram;
 
     float zoom = 45.0f;
     float yaw = -90.0f;
@@ -48,7 +51,7 @@ private:
 
     QQuaternion mRotation;
     QPointF lastPressedPos;
-    unsigned int texture[2];
+    unsigned int texture[3];
 signals:
 
 };

@@ -3,10 +3,12 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QDebug>
-#include "./Clock/clock.h"
-#include "./Dial/dial.h"
 #include <QStackedWidget>
 #include <QHash>
+#include <QTimer>
+#include "./Clock/clock.h"
+#include "./Dial/dial.h"
+#include "./ProgressBar/ProgressBar.h"
 
 static QHash<QString, QWidget*> widgetMap;
 
@@ -18,6 +20,14 @@ class Register##name {                                                   \
         }                                                                               \
     };                                                                                  \
  Register##name register##name;
+
+#define DESTORY_CLASS                                               \
+QHashIterator<QString, QWidget*> it(widgetMap);             \
+while (it.hasNext()) {                                                            \
+    it.next();                                                                          \
+    delete it.value();                                                              \
+}
+
 
 QWidget* getRegisterWidget(QString name)
 {
@@ -31,6 +41,7 @@ Widget::Widget(QWidget *parent) :
 {
     REGISTER_CLASS(Clock);
     REGISTER_CLASS(Dial);
+    REGISTER_CLASS(ProgressBar);
 
     ui->setupUi(this);
 
@@ -43,10 +54,16 @@ Widget::Widget(QWidget *parent) :
         textList << str;
     }
 
-    QButtonGroup* group = new QButtonGroup(this);
+    QButtonGroup *group = new QButtonGroup(this);
     QStackedWidget *stackedWidget = new QStackedWidget(this);
 
     for (int i = 0; i < textList.size(); i++) {
+        // 添加widget
+        QWidget *widget = getRegisterWidget(textList.at(i));
+        if (widget == NULL)
+            continue;
+        stackedWidget->addWidget(widget);
+
         // 设置button
         QPushButton *button = new QPushButton(this);
         button->setMinimumSize(135, 35);
@@ -57,11 +74,6 @@ Widget::Widget(QWidget *parent) :
         ui->verticalLayout->addWidget(button);
 
         group->addButton(button, i);
-        // 添加widget
-        QWidget *widget = getRegisterWidget(textList.at(i));
-        if (widget == NULL)
-            continue;
-        stackedWidget->addWidget(widget);
     }
 
     connect(group, SIGNAL(buttonClicked(int)), stackedWidget, SLOT(setCurrentIndex(int)));
@@ -73,4 +85,5 @@ Widget::Widget(QWidget *parent) :
 Widget::~Widget()
 {
     delete ui;
+    DESTORY_CLASS;
 }

@@ -42,18 +42,22 @@ void GLWidget::initializeGL()
 
     mShaderProgram = new ShaderProgram;
     lightShaderProgram = new ShaderProgram;
+    skyShaderProgram = new ShaderProgram;
     mShaderProgram->createShaderProgram(QStringList() << ":/res/shader.vs" << ":/res/shader.fs");
     lightShaderProgram->createShaderProgram(QStringList() << ":/res/lightshader.vs" << ":/res/lightshader.fs");
+    skyShaderProgram->createShaderProgram(QStringList() << ":/res/skyshader.vs" << ":/res/skyshader.fs");
 
     glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE); // 面剔除
-    glCullFace(GL_BACK);
+//    glEnable(GL_CULL_FACE); // 面剔除
+//    glCullFace(GL_BACK);
 
     loadTexture(":/res/container2.png", &texture[0], 0);
     loadTexture(":/res/container2_specular.png", &texture[1], 1);
+    loadTexture3D(&texture[2]);
 
     mObj = new Object;
     lightObj = new Object(1);
+    skyObj = new Object(2);
 
     // 使着色器调用和渲染调用都会使用该着色器程序对象
 
@@ -139,6 +143,22 @@ void GLWidget::paintGL()
     lightShaderProgram->setGLSLUniformMatrix4fv("model", model2.data());
     lightObj->drawObject();
 
+    glDepthFunc(GL_LEQUAL);
+    skyShaderProgram->enableShader();
+    skyShaderProgram->setGLSLUniform1i("skybox", 2);
+
+    QMatrix4x4 skyView;
+    memcpy(skyView.data(), view.data(), sizeof(float) * 3);
+    memcpy(skyView.data() + 4, view.data() + 4, sizeof(float) * 3);
+    memcpy(skyView.data() + 8, view.data() + 8, sizeof(float) * 3);
+
+    skyShaderProgram->setGLSLUniformMatrix4fv("view", skyView.data());
+    skyShaderProgram->setGLSLUniformMatrix4fv("projection", projection.data());
+    skyObj->bindObjectArray();
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture[2]);
+    skyObj->drawObject();
+    glDepthFunc(GL_LESS);
 }
 
 void GLWidget::keyPressEvent(QKeyEvent *event)
@@ -193,7 +213,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     mRotation = QQuaternion::fromAxisAndAngle(axis, angle) * mRotation;
 
     // 摄像头旋转
-    /*QPointF offset = event->pos() - lastPressedPos;
+    QPointF offset = event->pos() - lastPressedPos;
     offset = offset * 0.05f;
 
     yaw += offset.x();
@@ -210,7 +230,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     float z = sin(yaw * (PI / 180.0f)) * cos(pitch * (PI / 180.0f));
     QVector3D temp(x, y, z);
     temp.normalize();
-    camera->setCameraParam(temp, Camera::FRONT);*/
+    camera->setCameraParam(temp, Camera::FRONT);
 
     lastPressedPos = event->pos();
 }
@@ -252,4 +272,32 @@ void GLWidget::loadTexture(QString imgPath, unsigned int *textureID, int texture
                  GL_UNSIGNED_BYTE,      // 源图数据类型
                  textureImg.bits());
     glGenerateMipmap(GL_TEXTURE_2D);    // 处理多级渐远纹理
+}
+
+void GLWidget::loadTexture3D(unsigned int *textureID)
+{
+    glGenTextures(1, textureID);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, *textureID);
+
+    QStringList skyPiture = QStringList() << ":/res/skybox/right.jpg"
+                                          << ":/res/skybox/left.jpg"
+                                          << ":/res/skybox/top.jpg"
+                                          << ":/res/skybox/bottom.jpg"
+                                          << ":/res/skybox/front.jpg"
+                                          << ":/res/skybox/back.jpg";
+    QImage img;
+    for(int i = 0; i < skyPiture.size(); i++) {
+        img.load(skyPiture.at(i));
+        img = img.convertToFormat(QImage::Format_RGB32);
+        QImage textureImg = QGLWidget::convertToGLFormat(img);
+        textureImg = textureImg.mirrored();
+        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, textureImg.width(), textureImg.height(),
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, textureImg.bits());
+    }
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
 }

@@ -7,5 +7,13 @@
         <file>res/lightshader.vs</file>
         <file>res/container2.png</file>
         <file>res/container2_specular.png</file>
+        <file>res/skybox/back.jpg</file>
+        <file>res/skybox/bottom.jpg</file>
+        <file>res/skybox/front.jpg</file>
+        <file>res/skybox/left.jpg</file>
+        <file>res/skybox/right.jpg</file>
+        <file>res/skybox/top.jpg</file>
+        <file>res/skyshader.fs</file>
+        <file>res/skyshader.vs</file>
     </qresource>
 </RCC>

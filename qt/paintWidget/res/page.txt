@@ -1,2 +1,3 @@
-Dial
 Clock
+Dial
+ProgressBar
