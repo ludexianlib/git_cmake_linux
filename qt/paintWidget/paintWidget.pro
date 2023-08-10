@@ -22,6 +22,7 @@ FORMS    += widget.ui
 include($$PWD/Clock/Clock.pri)
 include($$PWD/Dial/Dial.pri)
 include($$PWD/ProgressBar/ProgressBar.pri)
+include($$PWD/Cards/Cards.pri)
 
 RESOURCES += \
     res.qrc

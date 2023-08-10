@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QPainterPath>
 #include <qmath.h>
+#include <iostream>
 
 #define PI 3.1415926
 

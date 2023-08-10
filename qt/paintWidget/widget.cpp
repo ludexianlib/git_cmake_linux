@@ -9,23 +9,24 @@
 #include "./Clock/clock.h"
 #include "./Dial/dial.h"
 #include "./ProgressBar/ProgressBar.h"
+#include "./Cards/Cards.h"
 
 static QHash<QString, QWidget*> widgetMap;
 
-#define REGISTER_CLASS(name)                                \
-class Register##name {                                                   \
-    public:                                                                         \
-        Register##name() {                                                  \
-            widgetMap[#name] = new name();                         \
-        }                                                                               \
-    };                                                                                  \
+#define REGISTER_CLASS(name)                               \
+class Register##name {                                                  \
+    public:                                                                       \
+        Register##name() {                                                \
+            widgetMap[#name] = new name();                      \
+        }                                                                           \
+    };                                                                              \
  Register##name register##name;
 
 #define DESTORY_CLASS                                               \
 QHashIterator<QString, QWidget*> it(widgetMap);             \
-while (it.hasNext()) {                                                            \
-    it.next();                                                                          \
-    delete it.value();                                                              \
+while (it.hasNext()) {                                                           \
+    it.next();                                                                         \
+    delete it.value();                                                             \
 }
 
 
@@ -42,6 +43,7 @@ Widget::Widget(QWidget *parent) :
     REGISTER_CLASS(Clock);
     REGISTER_CLASS(Dial);
     REGISTER_CLASS(ProgressBar);
+    REGISTER_CLASS(Cards);
 
     ui->setupUi(this);
 

@@ -7,6 +7,9 @@
 ProgressBar::ProgressBar(QWidget *parent) :
     QWidget(parent), mValue(50)
 {
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(setValue()));
+    timer->setInterval(50);
 }
 
 void ProgressBar::paintEvent(QPaintEvent *event)
@@ -50,6 +53,18 @@ void ProgressBar::paintEvent(QPaintEvent *event)
     painter.drawText(-min * 0.45, -min * 0.2, min * 0.9, min * 0.4, Qt::AlignCenter, value);
 }
 
+void ProgressBar::showEvent(QShowEvent *event)
+{
+    Q_UNUSED(event);
+    timer->start();
+}
+
+void ProgressBar::hideEvent(QHideEvent *event)
+{
+    Q_UNUSED(event);
+    timer->stop();
+}
+
 void ProgressBar::setValue(int value)
 {
     if (value > 100)
@@ -59,5 +74,14 @@ void ProgressBar::setValue(int value)
         value = 0;
 
     mValue = value;
+    update();
+}
+
+void ProgressBar::setValue()
+{
+    static int i = 0;
+    mValue = i++;
+    if (i > 100)
+        i = 0;
     update();
 }
