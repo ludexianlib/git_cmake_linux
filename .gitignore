@@ -11,3 +11,17 @@ build/
 # !/.git/
 # !/.gitnore
 # !/dir/
+
+# git log --graph --pretty=oneline --abbrev-commit
+# git switch -c name :创建分支
+# ...添加内容
+# git switch master
+# git merge dev :Fast forward模式
+# git merge --no-ff -m "合并分支信息" dev
+# git branch -d dev
+
+# git remove -v
+# git push origin <branch-name>
+# git checkout -b dev origin/dev : 创建远程分支到本地
+# git push origin dev
+# git branch --set-upstream-to=origin/dev dev : 本地与远程origin/dev分支链接
