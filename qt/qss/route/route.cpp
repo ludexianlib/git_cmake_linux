@@ -15,9 +15,10 @@ Route::Route(QWidget *parent) :
     ui->setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 0, 0))
     QTextCodec::setCodecForTr(QTextCodec::codecForName("utf-8"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
-
+#endif
     QSqlDatabase sql = QSqlDatabase::addDatabase("QSQLITE", "lu");
     sql.setDatabaseName("Route.db");
     sql.setUserName("ldx");
