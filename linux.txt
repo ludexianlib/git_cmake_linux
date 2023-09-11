@@ -16,3 +16,70 @@ g++:
                 ar rcs lib库名称.a wrapper.o
         使用:   g++ -c main.cpp         // main.o
                 g++ -static main.o libwrapper.a
+
+ls -la                  ls -lh
+touch   cat     more    pwd
+cp -r dir1 dir2         cp file1 file2
+rm -r dir1              rm file
+mv -r dir1 dir2         mv file1 file2
+查找mkdir路径：which mkdir
+
+按名称查找：find /path -name "test*"
+按大小查找：find /path -size -10k / +100M
+过滤：grep -n "keyword" test.txt
+数量统计：wc test.txt   -l：行数 -c：字节数 -m：字符数
+管道符：| 左边结果作为右边输入  cat test.txt | grep keyword
+
+echo "Hello World"      反引号：echo `pwd`
+重定向符：>（左侧命令覆盖写入右侧文件） >>（左侧命令追加写入右侧文件）
+        ls -l > path.txt        ls -l >> path.txt
+查看文件尾部内容：tail -10 file [-f]（持续跟踪）
+
+配置普通用户sudo: su - root     visudo (vim /etc/sudoers)
+        user ALL=(ALL)  NOPASSWD: ALL
+
+用户组：groupadd groupdel
+用户：useradd [-g -d] name      userdel -r name
+        usermod -aG 用户组 用户名 （将用户加入组）
+查看用户和组信息
+getent group
+getent passwd
+
+chomd u=rwx,g=r-x,o=r-x test.txt        chomd 777(754) test.txt
+chown 用户：用户组 file/dir(-R)
+
+history
+
+安装软件
+apt [-y] [install | remove | search] name
+软件控制
+systemctl [start | stop | status | enable | disabel] 服务名
+软链接：快捷方式
+ln -s file1/dir1 file2/dir2(目标)
+
+date [-d] [+格式]： date "+%Y-%m-%d %H:%M:%S"
+        date -d "-1 year"
+
+/etc/hosts配置主机名和ip地址配置关系
+ping -c 3 ip/主机名
+
+wget [-b](后台下载) url
+发起请求：curl [-O]（下载） url
+
+nmap ip地址
+查看端口占用情况：netstat -anp | grep 端口
+
+查看进程：ps [-e -f]
+        kill [-9]（强制关闭） 进程ID
+资源监控：top
+
+环境变量：env
+        echo $PATH      echo ${PATH}拼接字符
+临时环境变量：export MYNAME=ldx
+添加环境变量：export key=val
+永久环境变量：当前用户：~/.bashrc
+             所有用户：/etc/profile 配置生效：source /etc/profile
+                export PATH=$PATH:/path
+
+tar -C指定路径 -c压缩 -x解压 -v详细信息 -f文件 -z*.tar.gz
+zip unzip

@@ -368,7 +368,6 @@ void Tutorial::Thresholding(cv::Mat& src)
 	// 2: threshold truncated
 	// 3: threshold to zero
 	// 4: threshold to zero inverted
-
 	cv::Mat gray;
 	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
 	cv::threshold(gray, gray, 128, 255, 0);
@@ -425,6 +424,75 @@ void Tutorial::LaplacianOperator(cv::Mat& src)
 	convertScaleAbs(dst, abs_dst);
 	imshow("LaplacianOperator", abs_dst);
 }
+
+
+void Tutorial::CannyTrackbar(cv::Mat& src)
+{
+	int lowThreshold = 5;
+	const int maxThreshold = 100;
+	cv::namedWindow("canny", cv::WINDOW_AUTOSIZE);
+	int t = 3;
+	cv::createTrackbar("min threshold", "canny", &lowThreshold, maxThreshold, &Tutorial::CannyThreshold, &src);
+	CannyThreshold(lowThreshold, &src);
+}
+
+void Tutorial::HoughLinesTransform(cv::Mat& src)
+{
+	cv::Mat gray, dst, hdst;
+	cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+	cv::Canny(gray, dst, 50, 200, 3);
+	cv::cvtColor(dst, hdst, cv::COLOR_GRAY2BGR);
+
+	// Standard Hough Line Transform
+	std::vector<cv::Vec2f> lines;
+	cv::HoughLines(dst, lines, 1, CV_PI / 180, 150, 0, 0);
+	for (int i = 0; i < lines.size(); i++) {
+		float r = lines[i][0];
+		float t = lines[i][1];
+		
+		cv::Point p1, p2;
+		double a = cos(t), b = sin(t);
+		double x0 = a * r, y0 = b * r;
+
+		p1.x = round(x0 + 1000 * (-b));
+		p1.y = round(y0 + 1000 * a);
+		p2.x = round(x0 - 1000 * (-b));
+		p2.y = round(y0 - 1000 * a);
+		cv::line(hdst, p1, p2, cv::Scalar(128, 0, 128), 1, cv::LINE_AA);
+	}
+
+	/*
+		std::vector<cv::Vec4i> lines;
+		cv::HoughLines(dst, lines, 1, CV_PI / 180, 150, 0, 0);
+		for (int i = 0; i < lines.size(); i++) {
+			cv::Vec4i l = lines[i];
+			cv::line(hdst, cv::Point(l[0], l[1]), cv::Point(l[2], l[3]), cv::Scalar(128, 0, 128), 1, cv::LINE_AA);
+		}
+	*/
+
+	
+	/*	检测圆 (xCenter, yCenter, radius) https://docs.opencv.org/4.3.0/d4/d70/tutorial_hough_circle.html
+		std::vector<cv::Vec3f> circles;
+		cv::HoughLines(dst, circles, cv::HOUGH_GRADIENT, dst.rows / 16, 100, 30, 1, 30);
+		for (int i = 0; i < circles.size(); i++) {
+			cv::Vec3f c = circles[i];
+			cv::circle(hdst, cv::Point(c[0], c[1]), c[2], cv::Scalar(128, 0, 128), 1, cv::LINE_AA);
+		}
+	*/
+	cv::imshow("hough lines", hdst);
+	cv::imshow("src", src);
+}
+
+void Tutorial::CannyThreshold(int low, void* data)
+{
+	cv::Mat dst, gray;
+	cv::Mat src = *(cv::Mat*)data;
+	cv::cvtColor(src, gray, cv::COLOR_BGR2GRAY);
+	cv::blur(gray, dst, cv::Size(3, 3));
+	cv::Canny(dst, dst, low, (double)low * 3, 3);
+	cv::imshow("canny", dst);
+}
+
 
 MyData::MyData()
 	: A(0), id() 

@@ -26,6 +26,11 @@ public:
 	void MakeBorder(cv::Mat& src);
 	void Soble(cv::Mat& src);
 	void LaplacianOperator(cv::Mat& src);
+
+	static void CannyThreshold(int low, void* data);
+	void CannyTrackbar(cv::Mat& src);
+	void HoughLinesTransform(cv::Mat& src); // lines / circles
+
 };
 
 class MyData

@@ -31,6 +31,40 @@ app.setStyleSheet(qss.readAll());
 |   :read-only  |   只读或不可编辑  |
 |   :off  |   适用于处于“关闭”状态的项目（还有on）  |
 |   :left  |   项目位于左侧（还有right，top，bottom）  |
+```css
+/* 表格子控件示例 */
+QTableWidget {
+    ...
+    alternate-background-color: /* 交错颜色 */
+    gridline-color: 
+}
+QTableWidget::item:selected {
+    ...
+}
+QTableWidget::item:hover {
+    ...
+}
+    /* 表头 */
+QHeaderView::section {
+
+}
+    /* 滑块 */
+QScrollBar::handle:vertical {
+    ...
+}
+    /* 滑块悬浮 */
+QScrollBar::handle:hover:vertical {
+    ...
+}
+    /* 滑块已，未划过区域 */
+QScrollBar::sub-page:vertical, QScrollBar::add-page:vertical {
+    ...
+}
+    /* 页面上下移按钮 */
+QScrollBar::sub-line:vertical, QScrollBar::add-line:vertical {
+    ...
+}
+```
 ## 四、样式语法规则
 ```css
 width: 12px;		 /*设置宽度 单位像素*/
