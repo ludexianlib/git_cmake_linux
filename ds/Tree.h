@@ -97,4 +97,157 @@ struct ThreadNode
 template <class T>
 using ThreadTree = ThreadNode<T>* ;
 
+template <class T>
+void CreateInThread(ThreadTree<T> t)
+{
+    ThreadNode<T>* pre = nullptr;
+    if (t != nullptr) {
+        InThread(t, pre);
+        // 最后还要将pre线索化
+        pre->rchild = nullptr;
+        pre->rtag = 1;
+    }
+}
+
+template <class T>
+void InThread(ThreadTree<T> t, ThreadNode<T>& pre)
+{
+    // 中序线索化
+    if (t != nullptr) {
+        InThread(t->lchild, pre);
+        visit(t, pre);
+        InThread(t->rchild, pre);
+    }
+}
+
+template <class T>
+void visit(ThreadNode<T>* q, ThreadNode<T>& pre)
+{
+    // 建立q前驱线索pre
+    if (q->lchild == nullptr) {
+        q->lchild = pre;
+        q->ltag = 1;
+    }
+    // 建立pre后继线索q
+    if (pre != nullptr && pre->rchild == nullptr) {
+        pre->rchild = q;
+        pre->rtag = 1;
+    }
+    pre = q;
+}
+
+template <class T>
+ThreadNode<T>* FirstNode(ThreadNode<T>* p)
+{
+    // 中序：右孩子节点最左边叶子节点就是后继
+    while (p->ltag == 0) p = p->lchild;
+    return p;
+}
+
+template <class T>
+ThreadNode<T>* LastNode(ThreadNode<T>* p)
+{
+    // 中序：左孩子节点最右边叶子节点就是前驱
+    while (p->rtag == 0) p = p->rchild;
+    return p;
+}
+
+template <class T>
+ThreadNode<T>* FindInThreadNext(ThreadNode<T>* p)
+{
+    // 中序：找后继节点
+    if (p->rtag == 0) return FirstNode(p->rchild);
+    else return p->rchild;
+}
+
+template <class T>
+ThreadNode<T>* FindInThreadPre(ThreadNode<T>* p)
+{
+    // 中序：找前驱节点
+    if (p->ltag == 0) return LastNode(p->lchild);
+    else return p->lchild;
+}
+
+template <class T>
+void InOrder(ThreadNode<T>* t)
+{
+    // 中序：非递归遍历方法
+    ThreadNode<T>* p = FirstNode(t);
+    for (; p != nullptr; p = FindInThreadNext(p))
+        ;// visit(p);
+}
+
+template <class T>
+void RevInOrder(ThreadNode<T>* t)
+{
+    // 逆序遍历中序线索二叉树
+    ThreadNode<T>* p = LastNode(t);
+    for (; p != nullptr; p = FindInThreadPre(p))
+        ;// visit(p);
+}
+
+
+// 普通树、森林的数据结构
+namespace tree
+{
+    // 1.双亲表示法 -> 顺序数组
+    struct PTreeNode
+    {
+        int data;
+        int parent;
+    };
+    PTreeNode Tree[100];
+    
+    // 2.孩子表示法 -> 顺序 + 链式存储
+    struct CTreeNode
+    {
+        // 每一个孩子在链表中位置
+        int child;
+        CTreeNode *next;
+    };
+    struct CTreeNodeList
+    {
+        // 保存节点的数据和所有孩子
+        int data;
+        CTreeNode *first;
+    };
+    struct CTree
+    {
+        // 所有节点构成树，顺序存储
+        CTreeNodeList nodes[100];
+        int n, r;
+    };
+
+    // *3.孩子兄弟表示法 -> 树、二叉树、森林转换方法
+    struct CSNode
+    {
+        char data;
+        // 相当于二叉树的左右孩子节点
+        CSNode *firstChild, *nextSibling; // 指向第一个孩子和右兄弟
+        CSNode(char c) : data(c) 
+        {
+            firstChild = nullptr;
+            nextSibling = nullptr;
+        }
+    };
+
+    // 普通树的先根遍历 -> 3.孩子兄弟表示法
+    void PreOrder(CSNode *root)
+    {
+        if (root != nullptr)
+        {
+            // 先访问当前节点
+            // 当前节点的第一个孩子节点相当于左孩子节点
+            // 其他孩子节点看作为左孩子节点的兄弟节点（相当于二叉树右孩子节点）
+            printf("%c\n", root->data);
+            if (root->firstChild)
+                PreOrder(root->firstChild);
+            if (root->nextSibling)
+                PreOrder(root->nextSibling);
+        }
+    }
+
+    // 树的层次遍历（队列）
+}
+
 #endif // TREE_H
