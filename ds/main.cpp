@@ -37,5 +37,7 @@ int main()
     printf("先根遍历：\n");
     tree::PreOrder(&a);
 
+    
+
     return 0;
 }
