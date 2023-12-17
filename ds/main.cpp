@@ -71,7 +71,7 @@ int main()
     tree[11].parent = 4;
     tree[12].parent = 7;
 
-    int partentIndex = tree::findIndex(tree, 4);
+    int partentIndex = tree::findSetOptimal(tree, 4);
     printf("%d\n", partentIndex);
     tree::unionSet(tree, 4, 6);
     tree::unionSet(tree, 2, 12);

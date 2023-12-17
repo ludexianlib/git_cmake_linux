@@ -252,7 +252,7 @@ namespace tree
      * 并查集：普通树，采用1.双亲表示法合适
      * 快速查找某个节点是否属于某个集合
      */
-    int findIndex(const std::vector<PTreeNode> &tree, int xx)
+    int findSet(const std::vector<PTreeNode> &tree, int xx)
     {
         // 找到xx节点所在集合的父节点的索引
         while (tree[xx].parent >= 0)
@@ -260,12 +260,34 @@ namespace tree
         return xx;
     }
 
+    /**
+     * 压缩路径：下次查找可以直接找到父节点
+     * 查找结点优化，将每个遍历到的节点都接到父节点的下
+     */
+    int findSetOptimal(std::vector<PTreeNode> &tree, int xx)
+    {
+        int root = xx;
+        // 先找到父节点
+        while (tree[root].parent >= 0)
+            root = tree[root].parent;
+        
+        // 一直循环直到到达父节点
+        while (xx != root)
+        {
+            // 同时将遍历的节点设置到父节点下
+            int temp = tree[xx].parent;
+            tree[xx].parent = root;
+            xx = temp;
+        }
+        return root;
+    }
+
     // 合并两个元素的集合
     void unionSet(std::vector<PTreeNode> &tree, int index1, int index2)
     {
         // 找到父节点的索引，设置index2的集合的父节点为index1
-        index1 = findIndex(tree, index1);
-        index2 = findIndex(tree, index2);
+        index1 = findSetOptimal(tree, index1);
+        index2 = findSetOptimal(tree, index2);
         if (index1 == index2)
             return;
 
