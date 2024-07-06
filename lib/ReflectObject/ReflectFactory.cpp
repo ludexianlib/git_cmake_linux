@@ -52,3 +52,11 @@ ReflectFactory::~ReflectFactory()
 	}
 	delete d;
 }
+
+RefObject* getObject(const char* name)
+{
+	RefObject* obj = ReflectFactory::getInstance()->getObject(name);
+	if (obj == nullptr)
+		return nullptr;
+	return obj;
+}

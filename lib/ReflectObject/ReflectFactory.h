@@ -26,7 +26,7 @@ public:
 	static ReflectFactory* getInstance();
 	bool regesterObject(const char* name, ObjectCreator creator);
 
-	// 无需外部释放内存
+	// 可直接调用该函数获取对象 不需要delete对象！
 	RefObject* getObject(const char* name);
 private:
 	ReflectFactory();
@@ -35,3 +35,15 @@ private:
 private:
 	ReflectFactoryPrivate* d;
 };
+
+
+#if __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+// 获取对象
+REFLECT_OBJECT_EXPORT RefObject* getObject(const char* name);
+
+#if __cplusplus
+}
+#endif	//__cplusplus

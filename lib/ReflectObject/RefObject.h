@@ -1,5 +1,8 @@
 #pragma once
 
+/*
+ * 基类对象
+ */
 class RefObject
 {
 public:
