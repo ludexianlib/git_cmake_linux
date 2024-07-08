@@ -33,4 +33,4 @@ public:										\
 	const char* ClassName::objectName() {								\
 		return #ClassName;												\
 	}																	\
-static bool m_ret##className = ReflectFactory::getInstance()->regesterObject(#ClassName, ClassName::createObject);
+static bool m_ret##ClassName = ReflectFactory::getInstance()->regesterObject(#ClassName, ClassName::createObject);
