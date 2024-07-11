@@ -4,8 +4,8 @@
 class RegisterFactoryPrivate
 {
 public:
-	std::list<RegisterObject*> m_createClass;
 	std::unordered_map<std::string, ObjectCreator> m_mapClass;
+	std::unordered_map<std::string, RegisterObject*> m_createClass;
 };
 
 RegisterFactory* RegisterFactory::getInstance()
@@ -28,15 +28,21 @@ bool RegisterFactory::registerObject(const char* name, ObjectCreator creator)
 
 RegisterObject* RegisterFactory::createObject(const char* name)
 {
+	// 此前已经创建了对象直接返回
+	auto obj = d->m_createClass.find(name);
+	if (obj != d->m_createClass.end())
+		return obj->second;
+
+	// 查找是否已经注册该对象
 	auto it = d->m_mapClass.find(name);
 	if (it == d->m_mapClass.end())
 	{
 		throw("not found");
 		return nullptr;
 	}
-	RegisterObject* obj = it->second();
-	d->m_createClass.push_back(obj);
-	return obj;
+	RegisterObject* regObj = it->second();
+	d->m_createClass[name] = regObj;
+	return regObj;
 }
 
 RegisterFactory::RegisterFactory()
@@ -48,7 +54,7 @@ RegisterFactory::~RegisterFactory()
 {
 	for (auto c : d->m_createClass)
 	{
-		delete c;
+		delete c.second;
 	}
 	delete d;
 }

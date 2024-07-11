@@ -1,7 +1,7 @@
 #pragma once
 
 /*
- * 鍩虹被瀵硅薄
+ * 基类对象
  */
 class RegisterObject
 {

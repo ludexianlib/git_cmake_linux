@@ -2,14 +2,14 @@
 #include "RegisterFactory.h"
 
 /*
- * æ–¹å¼ä¸€ï¼šåœ¨ç±»å¤–æ³¨å†Œè¯¥å®
- * ç¤ºä¾‹ï¼š
+ * ·½Ê½Ò»£ºÔÚÀàÍâ×¢²á¸Ãºê
+ * Ê¾Àı£º
 	class TestObject : public RegisterObject
 	{
 	public:
 		//...
 	};
-	REGISTER_OBJECT_TO_FACTORY(TestObject)	// è¯¥æ–¹å¼å¯¼è‡´æ¯ä¸ªincludeçš„å¤´æ–‡ä»¶éƒ½åŒ…å«ä¸€ä¸ªé™æ€å…¨å±€å˜é‡
+	REGISTER_OBJECT_TO_FACTORY(TestObject)	// ¸Ã·½Ê½µ¼ÖÂÃ¿¸öincludeµÄÍ·ÎÄ¼ş¶¼°üº¬Ò»¸ö¾²Ì¬È«¾Ö±äÁ¿
  */
 #define REGISTER_OBJECT_TO_FACTORY(ClassName)				\
 	static RegisterObject* createObject##ClassName() {		\
@@ -19,22 +19,22 @@
 static bool m_reg##ClassName = RegisterFactory::getInstance()->registerObject(#ClassName, createObject##ClassName);
 
 /*
- * æ–¹å¼äºŒï¼šä½¿ç”¨ä¸‹é¢çš„ä¸¤ä¸ªå®ï¼ˆæ¨èï¼‰
-	// 1. *.hæ–‡ä»¶
+ * ·½Ê½¶ş£ºÊ¹ÓÃÏÂÃæµÄÁ½¸öºê£¨ÍÆ¼ö£©
+	// 1. *.hÎÄ¼ş
 	class TestObject : public RegisterObject
 	{
 		REGISTER_HEADER_DEFINE(TestObject)
 	public:
 		//...
 	};
-	// 2. *.cppæ–‡ä»¶
+	// 2. *.cppÎÄ¼ş
 	CREATE_OBJECT_IMPLEMENT(TestObject)
  */
 #define REGISTER_HEADER_DEFINE(ClassName)	\
 public:										\
 	static RegisterObject* createObject();	\
 	const char* objectName() override;		\
-private:	// ç±»é»˜è®¤ä¸ºç§æœ‰
+private:	// ÀàÄ¬ÈÏÎªË½ÓĞ
 
 #define CREATE_OBJECT_IMPLEMENT(ClassName)		\
 	RegisterObject* ClassName::createObject() {	\

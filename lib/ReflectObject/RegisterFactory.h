@@ -17,7 +17,7 @@ typedef RegisterObject* (*ObjectCreator)(void);
 class REGISTER_OBJECT_EXPORT RegisterFactory
 {
 public:
-	// ç¦æ­¢æ‹·è´å’Œèµ‹å€¼
+	// ½ûÖ¹¿½±´ºÍ¸³Öµ
 	RegisterFactory(const RegisterFactory&) = delete;
 	RegisterFactory(const RegisterFactory&&) = delete;
 	RegisterFactory& operator=(const RegisterFactory&) = delete;
@@ -26,7 +26,7 @@ public:
 	static RegisterFactory* getInstance();
 	bool registerObject(const char* name, ObjectCreator creator);
 
-	// å¯ç›´æ¥è°ƒç”¨è¯¥å‡½æ•°è·å–å¯¹è±¡ ä¸éœ€è¦deleteå¯¹è±¡ï¼
+	// ¿ÉÖ±½Óµ÷ÓÃ¸Ãº¯Êı»ñÈ¡¶ÔÏó ²»ĞèÒªdelete¶ÔÏó£¡
 	RegisterObject* createObject(const char* name);
 private:
 	RegisterFactory();
@@ -41,7 +41,7 @@ private:
 extern "C" {
 #endif // __cplusplus
 
-// è·å–å¯¹è±¡
+// »ñÈ¡¶ÔÏó
 REGISTER_OBJECT_EXPORT RegisterObject* createObject(const char* name);
 
 #if __cplusplus
