@@ -25,6 +25,36 @@ void SetRGB(uchar r, uchar g, uchar b)
     printf("rgb: 0x%x\n", rgb);
 }
 
+namespace ani
+{
+	class Animal
+	{
+	public:
+		virtual ~Animal() {}
+		virtual int get(void* p) { return a; }
+		int a = 0;
+	};
+	class Person : public Animal
+	{
+	public:
+		Person() {}
+		Person(int a) : aa(a) {}
+		Person(int a, double b, const std::string& str) : aa(a), bb(b), sStr(str) {}
+		int get(void* p) override { return aa; }
+		int aa = 0;
+		double bb = 0;
+		std::string sStr;
+	};
+
+	using AnimalPtr = std::shared_ptr<ani::Animal>;
+}
+
+#define Person(...) std::make_shared<ani::Person>(##__VA_ARGS__)
+/*
+    std::list<ani::AnimalPtr> lists;
+    lists.push_back(Person(1, 3.14, "str"));
+ */
+
 // 回调函数
 static bool Callback(int argc, char** argv)
 {
