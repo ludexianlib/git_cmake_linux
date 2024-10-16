@@ -1,75 +1,84 @@
 #pragma once
-#include <QMap>
-#include <QByteArray>
+#include <string>
+#include <iostream>
+#include <unordered_map>
 
-/*
- * 前缀树（字典树）
- */
-class Trie
+class TrieTree
 {
 public:
-	Trie() {}
-	~Trie()
+	TrieTree()
+	{
+
+	}
+
+	~TrieTree()
 	{
 		releaseResources(this);
 	}
 
-    // 插入
-	void insert(const QByteArray& word)
+	// 插入
+	void insert(const std::string& word)
 	{
-		Trie* node = this;
-		for (const char& ch : word)
+		TrieTree* node = this;
+		for (const auto& c : word)
 		{
-			if (!node->children.contains(ch))
+			// 创建节点 并指向该节点
+			if (node->m_map.count(c) == 0)
 			{
-				node->children[ch] = new Trie();
+				node->m_map[c] = new TrieTree();
 			}
-			node = node->children[ch];
+			node = node->m_map[c];
 		}
-		node->isEnd = true;
+
+		// 结尾
+		node->m_end = true;
 	}
 
-    // 查找
-	bool search(const QByteArray& word)
+	// 查找
+	bool search(std::string word)
 	{
-		Trie* node = this->searchPrefix(word);
-		return node != nullptr && node->isEnd;
-	}
-
-    // 查找前缀
-	bool startsWith(const QByteArray& prefix)
-	{
-		return this->searchPrefix(prefix) != nullptr;
-	}
-
-    // 释放内存
-	void releaseResources(Trie* node)
-	{
-		auto it = node->children.begin();
-		for (; it != node->children.end(); ++it)
+		TrieTree* node = this;
+		for (const auto& c : word)
 		{
-			Trie* s = it.value();
+			if (node->m_map.count(c) == 0)
+				return false;
+			node = node->m_map[c];
+		}
+
+		// 返回是否结尾
+		return node->m_end;
+	}
+
+	// 前缀
+	bool startWith(std::string word)
+	{
+		TrieTree* node = this;
+		for (const auto& c : word)
+		{
+			if (node->m_map.count(c) == 0)
+				return false;
+			node = node->m_map[c];
+		}
+
+		// 查找完成
+		return true;
+	}
+
+	// 释放内存
+	void releaseResources(TrieTree* node)
+	{
+		if (node->m_map.empty())
+			return;
+
+		for (const auto& val : node->m_map)
+		{
+			TrieTree* s = val.second;
 			delete s;
 		}
-		node->children.clear();
+		node->m_map.clear();
 	}
 
 private:
-	Trie* searchPrefix(const QByteArray& prefix)
-	{
-		Trie* node = this;
-		for (const char& ch : prefix)
-		{
-			if (!node->children.contains(ch))
-			{
-				return nullptr;
-			}
-			node = node->children[ch];
-		}
-		return node;
-	}
-
-private:
-	QMap<char, Trie*> children;
-	bool isEnd = false;
+	bool m_end = false;
+	std::unordered_map<char, TrieTree*> m_map;
 };
