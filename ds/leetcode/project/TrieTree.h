@@ -1,6 +1,5 @@
 #pragma once
 #include <string>
-#include <iostream>
 #include <unordered_map>
 
 class TrieTree
@@ -8,7 +7,6 @@ class TrieTree
 public:
 	TrieTree()
 	{
-
 	}
 
 	~TrieTree()
@@ -35,7 +33,7 @@ public:
 	}
 
 	// 查找
-	bool search(std::string word)
+	bool search(const std::string& word)
 	{
 		TrieTree* node = this;
 		for (const auto& c : word)
@@ -49,8 +47,8 @@ public:
 		return node->m_end;
 	}
 
-	// 前缀
-	bool startWith(std::string word)
+	// 查找前缀为word的字符串是否存在
+	bool startWith(const std::string& word)
 	{
 		TrieTree* node = this;
 		for (const auto& c : word)
@@ -64,6 +62,7 @@ public:
 		return true;
 	}
 
+private:
 	// 释放内存
 	void releaseResources(TrieTree* node)
 	{
