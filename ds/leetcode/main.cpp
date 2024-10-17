@@ -1,4 +1,5 @@
 #include "array/DoublePointer.h"
+#include "project/LRU.h"
 #include "project/TrieTree.h"
 
 #ifdef _DEBUG
@@ -24,6 +25,12 @@ int main(int argc, char* argv[])
     tree.insert("322");
     ret = tree.startWith("3");
     Debug("tree finds startWith: %d\n", ret);
+
+    // LRU缓存淘汰机制
+    LRU<std::string, std::string> lru(10);
+    lru.put("pp", "3244");
+    std::string str;
+    ret = lru.get("pp", str);
 
     return 0;
 }
