@@ -1,6 +1,7 @@
 #include "array/DoublePointer.h"
 #include "project/LRU.h"
 #include "project/TrieTree.h"
+#include "sort/HeapSort.h"
 
 #ifdef _DEBUG
 #define Debug(...) printf(##__VA_ARGS__)
@@ -31,6 +32,12 @@ int main(int argc, char* argv[])
     lru.put("pp", "3244");
     std::string str;
     ret = lru.get("pp", str);
+
+    // 堆排序
+    vector<std::string> chars{"bull", "cat", "ato", "Apple", "39", "boom"};
+    HeapSort<std::string>::sort(chars);
+    for (const auto& c : chars)
+        std::cout << c << std::endl;
 
     return 0;
 }
