@@ -1,5 +1,6 @@
 #include <sstream>
 #include "array/DoublePointer.h"
+#include "array/SlidingWindow.h"
 #include "project/LRU.h"
 #include "project/TrieTree.h"
 #include "sort/HeapSort.h"
@@ -14,13 +15,16 @@ int main(int argc, char* argv[])
 {
     // 数组
     vector<int> nums{1, 2, 3};
-    arr::Solution s;
-    int ret = s.removeElement(nums, 3);
+    arr::DoublePointer doublePointer;
+    int ret = doublePointer.removeElement(nums, 3);
     Debug("removeElement: %d\n", ret);
 
     // 三数之和
     nums = { -1, 0, 1, 2, -1, -4 };
-    vector<vector<int>> result = s.treeNum(nums);
+    vector<vector<int>> result = doublePointer.treeNum(nums);
+
+    // 滑动窗口
+    arr::SlidingWindow slidingWindow;
 
     // 字典树
     TrieTree tree;

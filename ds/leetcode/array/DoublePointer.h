@@ -9,7 +9,7 @@ namespace arr
      *brief  \双指针
      *param  \
      */
-    class Solution
+    class DoublePointer
     {
     public:
         /*
