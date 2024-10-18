@@ -4,6 +4,7 @@
 #include "project/LRU.h"
 #include "project/TrieTree.h"
 #include "sort/HeapSort.h"
+#include "string/DoublePointer.h"
 
 #ifdef _DEBUG
 #define Debug(...) printf(##__VA_ARGS__)
@@ -25,6 +26,11 @@ int main(int argc, char* argv[])
 
     // 滑动窗口
     arr::SlidingWindow slidingWindow;
+
+    // 反转字符串
+    str::DoublePointer strDoublePointer;
+    std::string reverseString("uoy");
+    strDoublePointer.reverse(reverseString);
 
     // 字典树
     TrieTree tree;
