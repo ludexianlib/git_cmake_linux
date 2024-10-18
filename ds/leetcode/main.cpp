@@ -1,3 +1,4 @@
+#include <sstream>
 #include "array/DoublePointer.h"
 #include "project/LRU.h"
 #include "project/TrieTree.h"
@@ -23,9 +24,24 @@ int main(int argc, char* argv[])
 
     // 字典树
     TrieTree tree;
-    tree.insert("322");
-    ret = tree.startWith("3");
-    Debug("tree finds startWith: %d\n", ret);
+	std::string content = std::string(
+		"时间就是金钱 "
+		"珍惜时间 "
+		"一寸光阴一寸金 "
+		"寸金难买寸光阴 "
+		"一年之计在于春 "
+		"一日之计在于晨 ");
+	std::istringstream stream(content);
+	std::string text;
+	while (getline(stream, text, ' '))
+		tree.insert(text);
+
+    // 查找以 "一" 为前缀的所有词组
+    std::list<std::string> words = tree.getWordsWithPrefix("一");
+    for (const auto& w : words)
+    {
+        // do something
+    }
 
     // LRU缓存淘汰机制
     LRU<std::string, std::string> lru(10);

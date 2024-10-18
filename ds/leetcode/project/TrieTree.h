@@ -35,34 +35,71 @@ public:
 	// 查找
 	bool search(const std::string& word)
 	{
-		TrieTree* node = this;
-		for (const auto& c : word)
+		TrieTree* node = findWord(word);
+		bool succeed = false;
+		if (node != nullptr)
 		{
-			if (node->m_map.count(c) == 0)
-				return false;
-			node = node->m_map[c];
+			// 结尾
+			succeed = node->m_end;
 		}
-
-		// 返回是否结尾
-		return node->m_end;
+		return succeed;
 	}
 
 	// 查找前缀为word的字符串是否存在
 	bool startWith(const std::string& word)
 	{
+		TrieTree* node = findWord(word);
+		return node != nullptr;	// 查找完成
+	}
+
+	// 查找所有以word为前缀的词组
+	std::list<std::string> getWordsWithPrefix(const std::string& word)
+	{
+		std::list<std::string> words;
+		if (word.empty())
+			return words;
+		
+		// 不存在前缀
+		TrieTree* node = findWord(word);
+		if (node == nullptr)
+			return words;
+
+		recursiveSearch(node, word, words);
+		return words;
+	}
+
+private:
+	// 递归查找
+	void recursiveSearch(TrieTree* node, std::string word, std::list<std::string>& words)
+	{
+		// 递归出口
+		if (node->m_end)
+		{
+			words.push_back(word);
+			return;
+		}
+
+		for (const auto& n : node->m_map)
+		{
+			char c = n.first;
+			TrieTree* next = node->m_map[c];
+			recursiveSearch(next, word + c, words);
+		}
+	}
+
+	// 查找word最后所在的节点
+	TrieTree* findWord(const std::string& word)
+	{
 		TrieTree* node = this;
 		for (const auto& c : word)
 		{
 			if (node->m_map.count(c) == 0)
-				return false;
+				return nullptr;
 			node = node->m_map[c];
 		}
-
-		// 查找完成
-		return true;
+		return node;
 	}
 
-private:
 	// 释放内存
 	void releaseResources(TrieTree* node)
 	{
