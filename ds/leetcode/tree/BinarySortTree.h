@@ -83,6 +83,26 @@ public:
         return succeed;
     }
 
+    // 大小
+    int size()
+    {
+        int sum = 0;
+        preOrder(m_root, sum);
+        return sum;
+    }
+
+    // 为空
+    bool empty()
+    {
+        return m_root == nullptr;
+    }
+
+    // 树的高度
+    int height()
+    {
+        return inOrder(m_root);
+    }
+
 private:
     // 查找key所在的节点 如果不存在则返回其父节点
     bool recursiveSearch(const Key& key, BiTreeNode<Key, Value>* node, BiTreeNode<Key, Value>* parent, BiTreeNode<Key, Value>** result)
@@ -146,8 +166,8 @@ private:
             }
 
             // 替换为前驱节点的数据
-            (*node)->key = p->key;
-            (*node)->value = p->value;
+            (*node)->key = s->key;
+            (*node)->value = s->value;
 
             if (p == *node)
             {
@@ -189,6 +209,26 @@ private:
             return recursiveDelete(key, &p->rightChild);
         }
         return true;
+    }
+
+    // 先序遍历 size
+    void preOrder(BiTreeNode<Key, Value>* node, int& size)
+    {
+        if (node == nullptr)
+            return;
+        ++size;
+        preOrder(node->leftChild, size);
+        preOrder(node->rightChild, size);
+    }
+
+    // 中序遍历 height
+    int inOrder(BiTreeNode<Key, Value>* node)
+    {
+        if (node == nullptr)
+            return 0;
+        int l = inOrder(node->leftChild);
+        int r = inOrder(node->rightChild);
+        return l > r ? l + 1 : r + 1;
     }
 
     // 释放内存（后序遍历）
