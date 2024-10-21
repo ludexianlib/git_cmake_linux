@@ -13,7 +13,7 @@ struct BiTreeNode
     BiTreeNode<Key, Value>* rightChild = nullptr;
 
     BiTreeNode() {}
-    BiTreeNode(Key k, Value v): key(k), value(v) {}
+    BiTreeNode(Key k, Value v) : key(k), value(v) {}
 };
 
 /*
@@ -26,12 +26,11 @@ class BinarySortTree
 public:
     BinarySortTree()
     {
-
     }
 
     ~BinarySortTree()
     {
-
+        release(m_root);
     }
 
     // 插入
@@ -68,7 +67,7 @@ public:
     // 删除
     bool remove(const Key& key)
     {
-
+        return recursiveDelete(key, &m_root);
     }
 
     // 查找
@@ -79,7 +78,7 @@ public:
         bool succeed = recursiveSearch(key, m_root, nullptr, &result);
         if (succeed)
         {
-            value = node->value;
+            value = result->value;
         }
         return succeed;
     }
@@ -101,28 +100,105 @@ private:
             *result = node;
             return true;
         }
-        
-        // key小于节点的key 往左查找
-        if (node->key < key)
+
+        if (key < node->key)
         {
+            // key小于节点的key 往左查找
             return recursiveSearch(key, node->leftChild, node, result);
         }
-
-        // Key大于节点的key 往右查找
-        if (node->key > key)
+        else if (key > node->key)
         {
+            // key大于节点的key 往右查找
             return recursiveSearch(key, node->rightChild, node, result);
         }
+        return true;
     }
 
     // 删除节点 为了不破坏二叉排序树的性质 需要修改node节点
-    bool recursiveDelete(BiTreeNode<Key, Value>** node)
+    bool deleteNode(BiTreeNode<Key, Value>** node)
     {
         BiTreeNode<Key, Value>* p = *node;
         if (p == nullptr)
             return false;
 
-        
+        if (p->leftChild == nullptr)
+        {
+            // 删除节点的左孩子为空 则右孩子替换删除节点
+            *node = p->rightChild;
+            delete p;
+        }
+        else if (p->rightChild == nullptr)
+        {
+            // 删除节点的右孩子为空 则左孩子替换删除节点
+            *node = p->leftChild;
+            delete p;
+        }
+        else
+        {
+            /*
+             *brief  \左右孩子都不为空 则删除节点的前驱节点替换删除节点
+             */
+            BiTreeNode<Key, Value>* s = p->leftChild;
+            while (s->rightChild)
+            {
+                p = s;
+                s = s->rightChild;
+            }
+
+            // 替换为前驱节点的数据
+            (*node)->key = p->key;
+            (*node)->value = p->value;
+
+            if (p == *node)
+            {
+                // 删除节点的左孩子没有右节点 左孩子指向前驱节点的左孩子即可
+                // 相当于删除前驱节点
+                (*node)->leftChild = s->leftChild;
+            }
+            else
+            {
+                // 删除节点的前驱节点的父节点 连接前驱节点的左孩子
+                p->rightChild = s->leftChild;
+            }
+            delete s;
+        }
+        return true;
+    }
+
+    // 递归删除
+    bool recursiveDelete(const Key& key, BiTreeNode<Key, Value>** node)
+    {
+        BiTreeNode<Key, Value>* p = *node;
+        if (p == nullptr)
+            return false;
+
+        if (p->key == key)
+        {
+            // 删除节点
+            return deleteNode(node);
+        }
+
+        if (key < p->key)
+        {
+            // 往左边查找
+            return recursiveDelete(key, &p->leftChild);
+        }
+        else if (key > p->key)
+        {
+            // 往右边查找
+            return recursiveDelete(key, &p->rightChild);
+        }
+        return true;
+    }
+
+    // 释放内存（后序遍历）
+    void release(BiTreeNode<Key, Value>* node)
+    {
+        if (node == nullptr)
+            return;
+        release(node->leftChild);
+        release(node->rightChild);
+        delete node;
     }
 
 private:
