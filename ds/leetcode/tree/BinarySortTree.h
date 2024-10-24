@@ -100,7 +100,7 @@ public:
     // 树的高度
     int height()
     {
-        return inOrder(m_root);
+        return postOrder(m_root);
     }
 
 private:
@@ -221,13 +221,13 @@ private:
         preOrder(node->rightChild, size);
     }
 
-    // 中序遍历 height
-    int inOrder(BiTreeNode<Key, Value>* node)
+    // 后序遍历 height
+    int postOrder(BiTreeNode<Key, Value>* node)
     {
         if (node == nullptr)
             return 0;
-        int l = inOrder(node->leftChild);
-        int r = inOrder(node->rightChild);
+        int l = postOrder(node->leftChild);
+        int r = postOrder(node->rightChild);
         return l > r ? l + 1 : r + 1;
     }
 
