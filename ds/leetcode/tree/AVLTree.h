@@ -35,11 +35,27 @@ public:
         postOrder(m_root);
     }
 
+    // 插入
     bool insert(const Key& key, const Value& value)
     {
         bool exist = false;
         m_root = recursiveInsert(m_root, key, value, exist);
         return !exist;
+    }
+
+    // 删除
+    bool remove(const Key& key)
+    {
+        bool exist = false;
+        m_root = deleteNode(m_root, key, exist);
+        return exist;
+    }
+
+    // 查找
+    bool search(const Key& key, Value& value)
+    {
+        bool exist = inOrder(m_root, key, value);
+        return exist;
     }
 
     int height()
@@ -48,7 +64,31 @@ public:
     }
 
 private:
-    // 后序遍历
+    // 找到node节点的中序后继
+    AVLTreeNode<Key, Value>* inOrderNext(AVLTreeNode<Key, Value>* node)
+    {
+        AVLTreeNode<Key, Value>* child = node->rightChild;
+        while (child->leftChild != nullptr)
+            child = child->leftChild;
+        return child;
+    }
+
+    // 中序遍历（查找）
+    bool inOrder(AVLTreeNode<Key, Value>* node, const Key& key, Value& value)
+    {
+        if (node == nullptr)
+            return false;
+        
+        if (node->key == key)
+        {
+            value = node->value;
+            return true;
+        }
+        return inOrder(node->leftChild, key, value);
+        return inOrder(node->rightChild, key, value);
+    }
+
+    // 后序遍历（删除）
     void postOrder(AVLTreeNode<Key, Value>* node)
     {
         if (node == nullptr)
@@ -64,7 +104,7 @@ private:
     }
 
     // 是否平衡 |height(left) - height(right)| <= 1
-    int balance(AVLTreeNode<Key, Value>* node)
+    int isBalance(AVLTreeNode<Key, Value>* node)
     {
         return node ? height(node->leftChild) - height(node->rightChild) : 0;
     }
@@ -147,7 +187,7 @@ private:
 
         // 插入后node节点的高度 + 1
         node->height = std::max(height(node->leftChild), height(node->rightChild)) + 1;
-        int balanceFactor = balance(node);
+        int balanceFactor = isBalance(node);
 
         // 往左孩子节点的左侧插入 LL：右旋
         if (balanceFactor > 1 && key < node->leftChild->key)
@@ -171,6 +211,78 @@ private:
             return leftRotate(node);                           // 再调整node
         }
         return node;
+    }
+
+    // 递归删除
+    AVLTreeNode<Key, Value>* deleteNode(AVLTreeNode<Key, Value>* root, const Key& key, bool& exist)
+    {
+        if (root == nullptr)
+            return root;
+
+        if (key < root->key)
+        {
+            // 往左孩子查找
+            root->leftChild = deleteNode(root->leftChild, key, exist);
+        }
+        else if (key > root->key)
+        {
+            // 往右孩子查找
+            root->rightChild = deleteNode(root->rightChild, key, exist);
+        }
+        else
+        {
+            exist = true;
+
+            if (root->leftChild == nullptr)
+            {
+                // 父节点没有左孩子
+                AVLTreeNode<Key, Value>* temp = root->rightChild;
+                delete root;
+                return temp;
+            }
+            else if (root->rightChild == nullptr)
+            {
+                // 父节点没有右孩子
+                AVLTreeNode<Key, Value>* temp = root->leftChild;
+                delete root;
+                return temp;
+            }
+
+            // 如果存在左右孩子 找到节点的中序后继替换父节点 并删除中序后继节点
+            AVLTreeNode<Key, Value>* next = inOrderNext(root);
+            root->key = next->key; 
+            root->value = next->value; 
+            root->rightChild = deleteNode(root->rightChild, next->key, exist);
+        }
+
+        if (root == nullptr)
+            return root;
+
+        root->height = std::max(height(root->leftChild), height(root->rightChild)) + 1;
+        int balanceFactor = isBalance(root);
+
+        // LL: 父节点和左孩子节点都是左边高
+        if (balanceFactor > 1 && isBalance(root->leftChild) >= 0)
+            return rightRotate(root);
+
+        // LR: 父节点左边高 左孩子节点右边高
+        if (balanceFactor > 1 && isBalance(root->leftChild) < 0)
+        {
+            root->leftChild = leftRotate(root->leftChild);
+            return rightRotate(root);
+        }
+
+        // RR: 父节点和右孩子节点都是右边高
+        if (balanceFactor < -1 && isBalance(root->rightChild) <= 0)
+            return leftRotate(root);
+
+        // RL: 父节点右边高 右孩子节点左边高
+        if (balanceFactor < -1 && isBalance(root->rightChild) > 0)
+        {
+            root->rightChild = rightRotate(root->rightChild);
+            return leftRotate(root);
+        }
+        return root;
     }
 
 private:
