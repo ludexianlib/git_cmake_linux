@@ -10,7 +10,7 @@ struct AVLTreeNode
 {
     Key key;
     Value value;
-    int height = 0; // 节点高度为: 左孩子高度 - 右孩子高度
+    int height = 1; // 节点高度为: 左孩子高度 - 右孩子高度
     AVLTreeNode<Key, Value>* leftChild = nullptr;
     AVLTreeNode<Key, Value>* rightChild = nullptr;
 
@@ -78,14 +78,15 @@ private:
     {
         if (node == nullptr)
             return false;
-        
+
         if (node->key == key)
         {
             value = node->value;
             return true;
         }
-        return inOrder(node->leftChild, key, value);
-        return inOrder(node->rightChild, key, value);
+        bool exist1 = inOrder(node->leftChild, key, value);
+        bool exist2 = inOrder(node->rightChild, key, value);
+        return exist1 || exist2;
     }
 
     // 后序遍历（删除）
@@ -250,8 +251,8 @@ private:
 
             // 如果存在左右孩子 找到节点的中序后继替换父节点 并删除中序后继节点
             AVLTreeNode<Key, Value>* next = inOrderNext(root);
-            root->key = next->key; 
-            root->value = next->value; 
+            root->key = next->key;
+            root->value = next->value;
             root->rightChild = deleteNode(root->rightChild, next->key, exist);
         }
 
