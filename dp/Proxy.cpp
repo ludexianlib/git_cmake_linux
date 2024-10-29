@@ -5,37 +5,50 @@ class Image
 {
 public:
     virtual ~Image() {}
-    virtual void Display() {}
+    virtual Image* clone() const { return new Image(*this); }
 };
 
 class RealImage : public Image
 {
 public:
-    void Display() override { printf("real show.\n"); }
+    Image* clone() const override { return new RealImage(*this); }
 };
 
-class ProxyImage : public Image
+class ProxyImage
 {
-private:
-    Image* img;
 public:
-    ProxyImage() : img(nullptr) {}
-    ~ProxyImage() { delete img; }
-    void Display() override
-    { 
-        if (img == nullptr)
-            img = new RealImage;
-        img->Display();
+    ProxyImage() : d(nullptr) {}
+    ProxyImage(Image* img) : d(img->clone()) {}
+    ProxyImage(const Image& img) : d(img.clone()) {}
+    ProxyImage(const ProxyImage& img) : d(img.d ? img.d->clone() : nullptr) {}
+    ProxyImage& operator=(const ProxyImage& img)
+    {
+        if (this != &img)
+        {
+            delete d;
+            d = (img.d ? img.d->clone() : nullptr);
+        }
+        return *this;
     }
+
+    ~ProxyImage() { delete d; }
+
+    inline Image* operator-> ()
+    {
+        return data();
+    }
+
+    inline Image* data()
+    {
+        _ASSERT(nullptr != d);
+        return d;
+    }
+
+    inline bool operator! ()
+    {
+        return !d;
+    }
+
+private:
+    Image* d;
 };
-
-int main()
-{
-    
-    Image* proxy = new ProxyImage;
-    proxy->Display();
-
-    delete proxy;
-
-    return 0;
-}
