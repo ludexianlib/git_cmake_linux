@@ -206,7 +206,7 @@ private:
         }
 
         // 往右孩子节点的左侧插入 RL：先右后左
-        if (balanceFactor < -1 && key < node->leftChild->key)
+        if (balanceFactor < -1 && key < node->rightChild->key)
         {
             node->rightChild = rightRotate(node->rightChild);  // 先调整node的右孩子
             return leftRotate(node);                           // 再调整node
