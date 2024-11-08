@@ -32,8 +32,21 @@ struct Vertex
     std::string data;           // 顶点信息
     int in = 0;                 // 顶点入度
     ArcNode* first = nullptr;   // 指向的第一条边
+
     Vertex() {}
-    Vertex(const std::string& d, int in, ArcNode* arc = nullptr) : data(d), in(in), first(arc) {}
+    Vertex(const std::string& d, int in, ArcNode* arc = nullptr)
+        : data(d),
+          in(in),
+          first(arc)
+    {
+    }
+
+    // 插入边（头插法）
+    void insertArc(ArcNode* node)
+    {
+        node->next = first;
+        first = node;
+    }
 };
 
 /*
@@ -55,15 +68,17 @@ struct ALGraph
 class ShortestPath
 {
 public:
-    ~ShortestPath()
+    ShortestPath(int vexNum, int arcNum, const std::vector<Vertex>& vertices)
     {
-        destoryArcNode();
+        m_alGraph.arcNum = arcNum;
+        m_alGraph.vertexNum = vexNum;
+        m_alGraph.vertices = vertices;
     }
 
     // 求v0顶点到任意顶点的最短路径
-    bool Dijkstra(int v0, std::vector<int>& path, std::vector<int>& distance)
+    void Dijkstra(int v0, std::vector<int>& path, std::vector<int>& distance)
     {
-        int vertexNum = m_alGraph->vertexNum;
+        int vertexNum = m_alGraph.vertexNum;
 
         // 表示对应位置的顶点是否求得最短路径
         std::vector<int> final(vertexNum, 0);
@@ -106,30 +121,12 @@ public:
         }
     }
 
-private:
-    // 获取v0顶点到任意顶点的权值
-    std::vector<int> getDistance(int v0)
-    {
-        // (INT_MAT / 2)表示两顶点间没有连接，无法到达
-        std::vector<int> distance(m_alGraph->vertexNum, INT_MAX / 2);
-        distance[v0] = 0;
-
-        // 遍历顶点的所有边
-        ArcNode* node = m_alGraph->vertices[v0].first;
-        while (node)
-        {
-            distance[node->vexIndex] = node->weight;
-            node = node->next;
-        }
-        return distance;
-    }
-
     // 释放顶点的边内存
     void destoryArcNode()
     {
-        for (int i = 0; i < m_alGraph->vertexNum; i++)
+        for (int i = 0; i < m_alGraph.vertexNum; i++)
         {
-            ArcNode* node = m_alGraph->vertices[i].first;
+            ArcNode* node = m_alGraph.vertices[i].first;
             while (node)
             {
                 ArcNode* temp = node;
@@ -139,6 +136,26 @@ private:
         }
     }
 
+    const ALGraph* getGraph() const { return &m_alGraph; }
+
 private:
-    ALGraph* m_alGraph = nullptr;
+    // 获取v0顶点到任意顶点的权值（邻接表）
+    std::vector<int> getDistance(int v0)
+    {
+        // (INT_MAT / 2)表示两顶点间没有连接，无法到达
+        std::vector<int> distance(m_alGraph.vertexNum, INT_MAX / 2);
+        distance[v0] = 0;
+
+        // 遍历顶点的所有边
+        ArcNode* node = m_alGraph.vertices[v0].first;
+        while (node)
+        {
+            distance[node->vexIndex] = node->weight;
+            node = node->next;
+        }
+        return distance;
+    }
+
+private:
+    ALGraph m_alGraph;
 };
