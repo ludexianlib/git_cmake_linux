@@ -3,6 +3,7 @@
 
 #include "shaderprogram.h"
 #include <QHash>
+#include <QVector>
 #include <QVector3D>
 #include <QVector2D>
 #include <QOpenGLFunctions_3_3_Core>

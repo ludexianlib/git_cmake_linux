@@ -23,10 +23,6 @@ const QVector3D objPos[5] =
 GLWidget::GLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
     setFocusPolicy(Qt::StrongFocus);
-    QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, [this]() { update(); });
-    timer->start(20);
-
 }
 
 GLWidget::~GLWidget()
@@ -66,9 +62,9 @@ void GLWidget::initializeGL()
     camera = new Camera(QVector3D(0, 0, 3), QVector3D(0, 0, -1), QVector3D(0, 1, 0));
 }
 
-void GLWidget::resizeGL(int /*w*/, int /*h*/)
+void GLWidget::resizeGL(int w, int h)
 {
-
+    glViewport(0, 0, w, h);
 }
 
 void GLWidget::paintGL()
@@ -171,6 +167,8 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
         camera->moveCamera(Camera::LEFT);
     if (event->key() == Qt::Key_Right)
         camera->moveCamera(Camera::RIGHT);
+    update();
+    QOpenGLWidget::keyPressEvent(event);
 }
 
 QPointF GLWidget::pixelPosToViewPos(const QPointF& p)
@@ -184,6 +182,8 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
     if (event->button() == Qt::LeftButton) {
         lastPressedPos = event->pos();
     }
+    update();
+    QOpenGLWidget::mousePressEvent(event);
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
@@ -233,6 +233,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
     camera->setCameraParam(temp, Camera::FRONT);
 
     lastPressedPos = event->pos();
+    update();
+    QOpenGLWidget::mouseMoveEvent(event);
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event)
@@ -244,6 +246,8 @@ void GLWidget::wheelEvent(QWheelEvent *event)
         zoom = 1.0f;
     if (zoom >= 90.0f)
         zoom = 90.0f;
+    update();
+    QOpenGLWidget::wheelEvent(event);
 }
 
 void GLWidget::loadTexture(QString imgPath, unsigned int *textureID, int textureUnit)
