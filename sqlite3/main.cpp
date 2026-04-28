@@ -27,7 +27,7 @@ int main()
     // DELETE FROM COMPANY WHERE NAME = 'Allen';
 
     const char* createTable;
-	createTable = "CREATE TABLE COMPANY("
+	createTable = "CREATE TABLE IF NOT EXISTS COMPANY("
 				  "ID       INT         PRIMARY    KEY   NOT NULL,"
 				  "NAME	    TEXT	    NOT NULL,"
 				  "AGE	    INT		    NOT NULL,"
@@ -35,9 +35,9 @@ int main()
 				  "SALARY	REAL);";
     const char* insertData;
 	insertData = "INSERT INTO COMPANY (ID, NAME, AGE, ADDRESS, SALARY) "
-				 "VALUES (1, 'Paul',  32, 'California', 20000.0);"
+				 "VALUES (1, 'Paul',  32, 'California', 20000.0) ON CONFLICT(ID) DO UPDATE SET NAME='Paul';"
 				 "INSERT INTO COMPANY (ID, NAME, AGE, ADDRESS, SALARY) "
-				 "VALUES (2, 'Allen', 25, 'Texas',      15000.0);";
+				 "VALUES (2, 'Allen', 25, 'Texas',      15000.0) ON CONFLICT(ID) DO UPDATE SET NAME='Allen';";
     const char* updateData;
 	updateData = "UPDATE COMPANY set SALARY = 25000.00 where ID=1; "
 				 "SELECT * from COMPANY";
@@ -84,5 +84,21 @@ int main()
         // ...end loop
     sqlite3_finalize(stmt);
     rc = sqlite3_exec(db, "commit", 0, 0, &errMsg);
+
+    // 查询数据
+    {
+        sqlite3_reset(stmt);
+        char data[128] = "SELECT NAME, COUNT(*) FROM COMPANY GROUP BY NAME\0";
+        sqlite3_prepare_v2(db, data, strlen(data), &stmt, 0);
+        while (sqlite3_step(stmt) == SQLITE_ROW) 
+        {
+            const char* name = (const char*)sqlite3_column_text(stmt, 0);
+            int count = sqlite3_column_int(stmt, 1);
+            printf("Name: %s, Count: %d\n", name, count);
+        }
+        sqlite3_finalize(stmt);
+        printf("Finished!\n");
+    }
+    
     return 0;
 }
